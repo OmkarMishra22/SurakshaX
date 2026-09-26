@@ -1,0 +1,23 @@
+{
+    "folders": [
+        {
+            "name": "SurakshaX — Industrial AI Safety Platform",
+            "path": "."
+        }
+    ],
+    "settings": {
+        "python.analysis.extraPaths": [
+            "${workspaceFolder}"
+        ],
+        "files.exclude": {
+            "**/__pycache__": true,
+            "**/pycache__": true,
+            "**/*.pyc": true,
+            "_vscode": true,
+            "SurakshaX_Full_Codebase": true,
+            "SurakshaX_Full_Codebase.zip": true,
+            "SurakshaX_Source_Code.zip": true,
+            "scratch": true
+        }
+    }
+}
