@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SurakshaX — AI/NLP Early Warning & Intervention System for SIF Precursors</title>
+    <!-- Chart.js for Industrial Safety Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar">
+        <div class="brand-header">
+            <div class="brand-logo">🛡️</div>
+            <div>
+                <div class="brand-title">SurakshaX</div>
+                <small class="brand-subtitle">OIL INDIA LIMITED • SAFETY AI</small>
+            </div>
+        </div>
+
+        <!-- TWO-MENU PORTAL MODE SWITCHER -->
+        <div style="padding: 12px 14px 6px 14px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px;">
+                Select Portal Menu
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: rgba(15, 23, 42, 0.65); padding: 4px; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                <button type="button" id="sidebarMenuWorkerBtn" onclick="window.selectPortalMenu('worker')" style="border: none; border-radius: 6px; padding: 8px 6px; font-size: 11.5px; font-weight: 800; cursor: pointer; background: #10b981; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35); transition: all 0.2s;">
+                    <span>👷</span> <span>Worker</span>
+                </button>
+                <button type="button" id="sidebarMenuHseBtn" onclick="window.selectPortalMenu('hse')" style="border: none; border-radius: 6px; padding: 8px 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; background: transparent; color: #cbd5e1; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;">
+                    <span>🛡️</span> <span>HSE / Admin</span>
+                </button>
+            </div>
+        </div>
+
+        <ul class="nav-list">
+            <!-- MENU 1: SIMPLE WORKER SAFETY PORTAL (NO SIGN-IN REQUIRED) -->
+            <li class="nav-category role-worker-section">Worker Safety Portal (Direct)</li>
+            <li class="nav-item role-worker-item">
+                <button class="nav-link active" data-tab="safety-gate">
+                    <span class="icon">🚪</span>
+                    <span>Smart Entry Gate Pass</span>
+                </button>
+            </li>
+            <li class="nav-item role-worker-item">
+                <button class="nav-link" data-tab="submit-report">
+                    <span class="icon">📝</span>
+                    <span>Submit Report</span>
+                    <span class="nav-badge danger">Multi-Lang</span>
+                </button>
+            </li>
+            <li class="nav-item role-worker-item">
+                <button class="nav-link" data-tab="repair-review">
+                    <span class="icon">🔧</span>
+                    <span>Post-Repair Review</span>
+                </button>
+            </li>
+            <li class="nav-item role-worker-item">
+                <button class="nav-link" data-tab="profile">
+                    <span class="icon">👤</span>
+                    <span>My Safety Dossier</span>
+                </button>
+            </li>
+
+            <!-- DEDICATED MENU FOR BIOMETRIC REGISTRATION (WORKER ONLY) -->
+            <li class="nav-category role-worker-section">Biometric Enrollment</li>
+            <li class="nav-item role-worker-item">
+                <button type="button" class="nav-link" onclick="window.openAuthPortal('register')" style="border: 1px dashed rgba(16, 185, 129, 0.45); background: rgba(16, 185, 129, 0.08); border-radius: 8px; margin-bottom: 6px; color: #34d399; font-weight: 700;">
+                    <span class="icon">📸</span>
+                    <span>New Face Registration</span>
+                    <span class="nav-badge success" style="background: #10b981; color: white;">Enroll</span>
+                </button>
+            </li>
+
+            <!-- MENU 2: HSE OFFICER / ADMIN PORTAL SECTION (REQUIRES SIGN-IN) -->
+            <li class="nav-category role-hse-section" style="display: none;">HSE Operations &amp; Triage</li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="dashboard">
+                    <span class="icon">📊</span>
+                    <span>HSE Dashboard</span>
+                </button>
+            </li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="priority">
+                    <span class="icon">🎯</span>
+                    <span>HSE Risk Priority</span>
+                </button>
+            </li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="intervention">
+                    <span class="icon">⚡</span>
+                    <span>Interventions</span>
+                </button>
+            </li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="machines">
+                    <span class="icon">⚙️</span>
+                    <span>Machine Safety</span>
+                </button>
+            </li>
+
+            <li class="nav-category role-hse-section" style="display: none;">Audit &amp; Intelligence</li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="hse-review">
+                    <span class="icon">✍️</span>
+                    <span>HSE Review</span>
+                </button>
+            </li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="reports">
+                    <span class="icon">📑</span>
+                    <span>Report History</span>
+                </button>
+            </li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="analytics">
+                    <span class="icon">📈</span>
+                    <span>Safety Analytics</span>
+                </button>
+            </li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="feedback">
+                    <span class="icon">🧠</span>
+                    <span>AI Learning &amp; Feedback</span>
+                </button>
+            </li>
+            <li class="nav-item role-hse-item" style="display: none;">
+                <button class="nav-link" data-tab="profile">
+                    <span class="icon">👤</span>
+                    <span>Personnel Safety Dossier</span>
+                </button>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT AREA ==================== -->
+    <div class="app-container">
+        
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="globalSearchInput" placeholder="Global search: Report ID, Worker, Machine, Hazard, Site...">
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <!-- Offline Status & Sync Queue -->
+                <div class="network-pill" id="networkStatusPill" title="Network status indicator (Click to toggle offline mode)">
+                    <span class="pulse-dot"></span>
+                    <span>SYSTEM ONLINE</span>
+                </div>
+                <span id="offlinePendingBadge" class="nav-badge danger" style="display: none;">0 Pending</span>
+
+                <!-- Dedicated Login & Registration Menu Buttons -->
+                <button type="button" class="btn btn-success btn-sm" onclick="window.openAuthPortal('register')" style="font-weight: 700; background: #10b981; border-color: #059669;" title="Enroll Face ID Biometrics &amp; Register New Account">
+                    📸 Register Face
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="authPortalTriggerBtn" onclick="window.openAuthPortal('signin')" style="font-weight: 700;" title="Sign In with Username &amp; Password">
+                    🔑 Login
+                </button>
+
+                <!-- Notifications Bell -->
+                <button class="icon-btn" id="notifBellBtn" title="Alerts &amp; Notifications">
+                    🔔
+                    <span class="btn-badge" id="notifBadge">0</span>
+                </button>
+
+                <!-- Current User Profile (Click to open Personnel Safety Dossier) -->
+                <div class="user-profile" id="topbarUserProfileBtn" style="cursor: pointer;" title="Click to view Personnel Profile &amp; Safety Dossier" onclick="switchTab('profile')">
+                    <div class="user-avatar" id="userAvatarDisplay">👷</div>
+                    <div class="user-meta">
+                        <div class="user-name" id="userNameDisplay">Worker Mode</div>
+                        <div class="user-role-badge" id="userRoleDisplay">DIRECT ACCESS</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Pages Container -->
+        <main class="content-area">
+
+            <!-- ==================== TAB 1: HSE DASHBOARD ==================== -->
+            <section id="tab-dashboard" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">HSE Command Center</h1>
+                        <p class="page-desc">Comprehensive early warning intelligence, SIF precursor signals, and corrective workflow triage.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary btn-sm" onclick="document.querySelector('[data-tab=\'submit-report\']').click()">
+                            + New Safety Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Metric Cards -->
+                <div class="grid-kpis">
+                    <div class="kpi-card info">
+                        <div class="kpi-title">Total Reports</div>
+                        <div class="kpi-val" id="kpiTotalReports">--</div>
+                        <div class="kpi-sub">Field observations logged</div>
+                    </div>
+                    <div class="kpi-card critical">
+                        <div class="kpi-title">SIF Potential Reports</div>
+                        <div class="kpi-val" id="kpiSifReports" style="color: #b91c1c;">--</div>
+                        <div class="kpi-sub">Fatal / major injury precursors</div>
+                    </div>
+                    <div class="kpi-card critical">
+                        <div class="kpi-title">Critical Risks</div>
+                        <div class="kpi-val" id="kpiCriticalRisks" style="color: #ef4444;">--</div>
+                        <div class="kpi-sub">Risk score >= 85%</div>
+                    </div>
+                    <div class="kpi-card warning">
+                        <div class="kpi-title">High Risks</div>
+                        <div class="kpi-val" id="kpiHighRisks" style="color: #f97316;">--</div>
+                        <div class="kpi-sub">Score 65% - 84%</div>
+                    </div>
+                    <div class="kpi-card warning">
+                        <div class="kpi-title">Pending HSE Actions</div>
+                        <div class="kpi-val" id="kpiPendingHSE">--</div>
+                        <div class="kpi-sub">Action required or in progress</div>
+                    </div>
+                    <div class="kpi-card critical">
+                        <div class="kpi-title">Overdue Machines</div>
+                        <div class="kpi-val" id="kpiOverdueMachines" style="color: #b91c1c;">--</div>
+                        <div class="kpi-sub">Past scheduled service date</div>
+                    </div>
+                    <div class="kpi-card info">
+                        <div class="kpi-title">Interlocked Machines</div>
+                        <div class="kpi-val" id="kpiLockedMachines">--</div>
+                        <div class="kpi-sub">Software interlock engaged</div>
+                    </div>
+                    <div class="kpi-card safe">
+                        <div class="kpi-title">Awaiting Review</div>
+                        <div class="kpi-val" id="kpiAwaitingReview">--</div>
+                        <div class="kpi-sub">Fresh AI analyzed reports</div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Charts Row 1 -->
+                <div class="two-col-grid">
+                    <div class="card">
+                        <div class="card-title">
+                            <span>Risk Level Distribution</span>
+                            <small style="color: #64748b; font-weight: 500;">Multi-factor evaluation</small>
+                        </div>
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="chartRiskDist"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">
+                            <span>SIF Precursor vs Non-SIF Ratio</span>
+                            <small style="color: #64748b; font-weight: 500;">Campbell Institute classification</small>
+                        </div>
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="chartSifCompare"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Charts Row 2 -->
+                <div class="two-col-grid">
+                    <div class="card">
+                        <div class="card-title">
+                            <span>SIF Precursor Trend (Last 7 Days)</span>
+                            <small style="color: #64748b; font-weight: 500;">Real-time risk velocity</small>
+                        </div>
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="chartSifTrend"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">
+                            <span>Top Recurring Hazards</span>
+                            <small style="color: #64748b; font-weight: 500;">Primary energy & barrier triggers</small>
+                        </div>
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="chartTopHazards"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Operations Row: Weather Corner & Hybrid Cloud Offline Hub -->
+                <div class="two-col-grid" style="margin-top: 16px;">
+                    <!-- CORNER A: Site Weather & Atmospheric Safety Widget -->
+                    <div class="card" id="dashboardWeatherCorner">
+                        <div class="card-title">
+                            <span>🌦️ Site Meteorological &amp; Weather Safety</span>
+                            <div>
+                                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 2px 8px;" onclick="window.refreshLiveWeather()">
+                                    🔄 Refresh Weather
+                                </button>
+                            </div>
+                        </div>
+                        <div id="siteConditionsGrid" style="display: flex; flex-direction: column; gap: 10px;">
+                            <!-- Populated dynamically by app.js -->
+                        </div>
+                    </div>
+
+                    <!-- CORNER B: Cloud Computing & Edge Offline Access Hub -->
+                    <div class="card" id="dashboardCloudCorner">
+                        <div class="card-title">
+                            <span>☁️ Hybrid Cloud &amp; Edge Offline Computing Hub</span>
+                            <span class="badge badge-low" id="cloudHubStatusBadge">● Cloud Connected</span>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; margin-bottom: 12px;">
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+                                <div style="color: #64748b; font-size: 11px; text-transform: uppercase;">Central Cloud Node</div>
+                                <div style="font-weight: 700; color: #0284c7; margin-top: 2px;">OIL Central Gov-Cloud</div>
+                                <div style="font-size: 10.5px; color: #059669; margin-top: 4px;">✓ Real-time Sync Active</div>
+                            </div>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+                                <div style="color: #64748b; font-size: 11px; text-transform: uppercase;">Local Edge Node</div>
+                                <div style="font-weight: 700; color: #0f2744; margin-top: 2px;">Duliajan Edge Server (SQLite)</div>
+                                <div style="font-size: 10.5px; color: #64748b; margin-top: 4px;">Zero Outage Cache Ready</div>
+                            </div>
+                        </div>
+
+                        <div style="background: #f1f5f9; border-radius: 6px; padding: 10px 12px; font-size: 12px; margin-bottom: 12px; color: #334155; line-height: 1.4;">
+                            <strong>Hybrid Edge-Cloud Architecture:</strong> In remote Assam oilfields without stable satellite/fiber links, SurakshaX runs 100% offline edge inference and saves transactions in local SQLite. When connectivity restores, transactions automatically synchronize.
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-bottom: 10px;">
+                            <div style="font-size: 12px;">
+                                Pending Local Records: <strong id="cloudPendingCount">0</strong>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="offlineManager.toggleSimulation()" id="cloudSimulateOfflineBtn">
+                                    📶 Toggle Edge Offline
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="offlineManager.syncAll(); window.showToast('Cloud synchronization completed!', 'success');">
+                                    🔄 Push Edge Sync
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Industrial P2P Edge Mesh Network Topology -->
+                        <div style="background: #0f172a; color: #38bdf8; border-radius: 6px; padding: 10px; font-family: monospace; font-size: 11px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">
+                                <span style="font-weight: 700; color: #f8fafc;">📡 Industrial P2P Edge Mesh Network (Zero-Outage Sync)</span>
+                                <button type="button" class="btn btn-outline btn-sm" style="font-size: 10.5px; padding: 2px 8px; border-color: #38bdf8; color: #38bdf8;" onclick="offlineManager.triggerMeshGossipSync()">
+                                    ⚡ P2P Gossip Relay
+                                </button>
+                            </div>
+                            <div id="meshNodesTopology" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                <div style="background: #1e293b; padding: 5px 8px; border-radius: 4px; border-left: 3px solid #10b981;">
+                                    <strong>OIL-GATEWAY-ALPHA</strong><br>
+                                    <span style="color:#4ade80;">Duliajan Hub • SYNCED (18ms)</span>
+                                </div>
+                                <div style="background: #1e293b; padding: 5px 8px; border-radius: 4px; border-left: 3px solid #10b981;">
+                                    <strong>SAFETY-GATE-EDGE-01</strong><br>
+                                    <span style="color:#4ade80;">Vision Gate • ACTIVE MESH (2ms)</span>
+                                </div>
+                                <div style="background: #1e293b; padding: 5px 8px; border-radius: 4px; border-left: 3px solid #38bdf8;">
+                                    <strong>RIG-MESH-NODE-04</strong><br>
+                                    <span style="color:#38bdf8;">Moran Floor • SUB-GHZ (8ms)</span>
+                                </div>
+                                <div style="background: #1e293b; padding: 5px 8px; border-radius: 4px; border-left: 3px solid #eab308;">
+                                    <strong>MOBILE-PATROL-07</strong><br>
+                                    <span style="color:#facc15;">Tablet Relay • GOSSIPING (12ms)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 2: AI SAFETY GATE ==================== -->
+            <section id="tab-safety-gate" class="page-tab active">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Smart Safety Entry Gate</h1>
+                        <p class="page-desc">Pre-entry biometric identity check, credential validation, real offline camera PPE inspection, and visiting mechanic entry.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="badge badge-low">Gate Status: Active (Duliajan Gate 1)</span>
+                    </div>
+                </div>
+
+                <!-- Safety Attendance & Verification Banner -->
+                <div style="background: linear-gradient(90deg, #0f2744, #0284c7); color: #ffffff; border-radius: 8px; padding: 12px 18px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.25);">
+                    <div style="font-weight: 700; font-size: 14px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                        <span>🛡️ REAL-TIME BIOMETRIC &amp; PPE SAFETY ATTENDANCE</span>
+                    </div>
+                    <div style="font-size: 12.5px; font-weight: 700; background: rgba(255,255,255,0.15); padding: 5px 14px; border-radius: 20px; letter-spacing: 0.5px;">
+                        AUTOMATED BIOMETRIC &amp; PPE VERIFICATION
+                    </div>
+                </div>
+
+                <!-- WORKER ENTRY GATE WEATHER CLEARANCE & ADVERSE WARNING ALERT -->
+                <div id="gateWeatherBanner" style="margin-bottom: 16px;">
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 24px;">🌤️</span>
+                            <div>
+                                <strong style="color: #166534; font-size: 13.5px;">Gate Environmental &amp; Weather Safety Status:</strong>
+                                <div id="gateWeatherStatusText" style="font-size: 12px; color: #15803d; margin-top: 2px;">
+                                    Duliajan Central Field: 28°C • Wind: 12 km/h • Humidity: 68% • Clear Sky — Weather conditions are NOMINAL &amp; SAFE for rig entry.
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <span id="gateWeatherBadge" class="badge badge-low" style="font-size: 12px;">WEATHER NOMINAL</span>
+                            <button type="button" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 3px 8px;" onclick="window.testToggleAdverseWeather()">
+                                ⚡ Simulate Storm Alert
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- POPUP WARNING FOR ADVERSE WEATHER -->
+                <div id="adverseWeatherPopup" style="display: none; background: #fef2f2; border: 2px solid #ef4444; border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.25);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div style="display: flex; gap: 12px; align-items: flex-start;">
+                            <span style="font-size: 32px;">⛈️</span>
+                            <div>
+                                <strong style="color: #991b1b; font-size: 14px;">⚠️ ADVERSE WEATHER WARNING FOR ENTERING PERSONNEL</strong>
+                                <div id="adverseWeatherPopupText" style="font-size: 12.5px; color: #b91c1c; margin-top: 4px; line-height: 1.5;">
+                                    Severe Wind Velocity (38 km/h) and Heavy Monsoon Rain detected at Duliajan. Crane hoisting &amp; Working at Height are SUSPENDED. All workers must equip anti-slip boots, waterproof hoods, and tethering gear.
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('adverseWeatherPopup').style.display='none'">
+                            ✕ Acknowledge
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sub-Navigation for Employee Scan vs Mechanic Entry -->
+                <div class="sub-nav-tabs">
+                    <button class="sub-tab-btn active" id="gateTabEmployeeBtn" onclick="switchGateSubTab('employee')">
+                        👤 Employee Biometric &amp; PPE Scan
+                    </button>
+                    <button class="sub-tab-btn" id="gateTabMechanicBtn" onclick="switchGateSubTab('mechanic')">
+                        🔧 Visiting Mechanic / Contractor Entry
+                    </button>
+                </div>
+
+                <!-- SECTION A: EMPLOYEE BIOMETRIC SCAN -->
+                <div id="gateSubSectionEmployee">
+                    <div class="two-col-grid">
+                        <!-- Scanner Column -->
+                        <div class="card">
+                            <div class="card-title">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span>📹 Live Camera Scanner</span>
+                                    <span class="badge badge-low" style="font-size: 11px;">100% Live Optical Feed</span>
+                                </div>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <button id="gateToggleCameraBtn" type="button" class="btn btn-primary btn-sm">
+                                        📹 Start Camera
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="camera-box" style="height: 380px;">
+                                <canvas id="gateCameraCanvas" class="camera-canvas" width="640" height="420"></canvas>
+                                <div class="camera-overlay-badge">
+                                    <span>● LIVE</span>
+                                    <span id="gateCameraBadgeText">LIVE CAMERA STANDBY</span>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 16px;">
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <button id="gateScanBtn" class="btn btn-primary" style="flex: 1; font-weight: 700; padding: 10px 16px; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                        🔍 Scan Live Face &amp; PPE
+                                    </button>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #475569; cursor: pointer; user-select: none; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; white-space: nowrap;">
+                                        <input type="checkbox" id="gateAutoScanToggle" checked style="cursor: pointer;">
+                                        ⚡ Auto-Scan Live
+                                    </label>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                    <small style="color: #64748b; font-size: 11.5px;">
+                                        Worker identification runs strictly against registered personnel database.
+                                    </small>
+                                    <button type="button" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 3px 8px;" onclick="window.clearAllBiometricData()">
+                                        🗑️ Clear Registered Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Readiness & Clearance Result Column -->
+                        <div class="card">
+                            <div class="card-title">
+                                <span>🛡️ Safety Readiness Clearance</span>
+                                <small style="color: #64748b;">Automated gate barrier interlock</small>
+                            </div>
+
+                            <div id="gateResultContainer">
+                                <div style="text-align: center; padding: 60px 20px; color: #94a3b8;">
+                                    <div style="font-size: 44px; margin-bottom: 12px;">🛡️</div>
+                                    <h3 style="font-size: 15px; color: #334155; margin-bottom: 6px;">Safety Gate Standby</h3>
+                                    <p style="font-size: 13px; max-width: 320px; margin: 0 auto; line-height: 1.5;">
+                                        Click <strong>Start Real Camera</strong> or <strong>Scan Worker</strong> to verify all 6 PPE items and biometric identity.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION B: MECHANIC / CONTRACTOR VISITOR ENTRY -->
+                <div id="gateSubSectionMechanic" style="display: none;">
+                    <div class="two-col-grid">
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Mechanic / Contractor Entry Registration</span>
+                                <span class="badge badge-medium">Vendor Verification</span>
+                            </div>
+
+                            <form id="mechanicEntryForm">
+                                <div class="form-group">
+                                    <label class="form-label">Mechanic Full Name *</label>
+                                    <input type="text" id="mechName" class="form-control" placeholder="e.g. Bikash Borah / Rajesh Das" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="tel" id="mechPhone" class="form-control" placeholder="e.g. +91 98765 43210" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Permanent / Workshop Address *</label>
+                                    <input type="text" id="mechAddress" class="form-control" placeholder="e.g. Mechanical Workshop, Duliajan East, Assam" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Assigned Equipment for Repair</label>
+                                    <select id="mechMachine" class="form-select">
+                                        <option value="Main Gas Compressor C-12 (M101)">Main Gas Compressor C-12 (M101) — Overdue</option>
+                                        <option value="High-Pressure Mud Pump P-07 (M102)">High-Pressure Mud Pump P-07 (M102) — Overdue</option>
+                                        <option value="Main Power Generator G-04 (M103)">Main Power Generator G-04 (M103)</option>
+                                        <option value="ESD Wellhead Valve V-19 (M104)">ESD Wellhead Valve V-19 (M104)</option>
+                                        <option value="Rig Mast Drilling Hoist H-02 (M105)">Rig Mast Drilling Hoist H-02 (M105)</option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" id="issueMechPassBtn" class="btn btn-primary" style="width: 100%; font-weight: 700;">
+                                    🎫 Issue Temporary Mechanic Gate Pass
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Generated Mechanic Pass Display -->
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Mechanic Gate Pass Ticket</span>
+                                <small style="color: #64748b;">Official entry credential</small>
+                            </div>
+
+                            <div id="mechPassDisplayContainer">
+                                <div style="text-align: center; padding: 60px 20px; color: #94a3b8;">
+                                    <div style="font-size: 44px; margin-bottom: 12px;">🎫</div>
+                                    <h3 style="font-size: 15px; color: #334155; margin-bottom: 6px;">No Active Mechanic Pass</h3>
+                                    <p style="font-size: 13px; max-width: 320px; margin: 0 auto; line-height: 1.5;">
+                                        Enter mechanic details on the left to issue a verified entry pass.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 3: SUBMIT SAFETY REPORT (MULTILINGUAL) ==================== -->
+            <section id="tab-submit-report" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Submit Safety Report</h1>
+                        <p class="page-desc">Report hazards using voice or text in <strong>any language</strong> (Hindi, Assamese, Bengali, Hinglish, English, etc.).</p>
+                    </div>
+                    <div>
+                        <span class="badge badge-low">Multilingual AI Engine: Active</span>
+                    </div>
+                </div>
+
+                <!-- Highlighted NLP Model Architecture Banner -->
+                <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #93c5fd; border-radius: 8px; padding: 12px 16px; margin-bottom: 12px; font-size: 12.5px; color: #1e3a8a; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <strong style="font-size: 13px;">🛡️ SurakshaX NLP Architecture:</strong> 
+                        <span style="font-family: monospace; background: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: 700; color: #1d4ed8; border: 1px solid #bfdbfe; margin-left: 4px;">Domain-Specific Hybrid Bi-Encoder Transformer</span>
+                        <div style="color: #1e40af; font-size: 11.5px; margin-top: 3px;">
+                            Engineered with DistilBERT/MiniLM semantic embeddings, zero-shot IOGP/OSHA SIF precursor cosine similarity scoring, and syntactic negation scope detection.
+                        </div>
+                    </div>
+                    <span class="badge badge-low" style="background:#2563eb; color:#ffffff; font-weight: 700;">Bi-Encoder Transformer Active</span>
+                </div>
+
+                <!-- Multilingual Banner -->
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; font-size: 12.5px; color: #166534; display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <strong>🌐 Language Friendly Safety Ingestion:</strong> Speak or type in Hindi (हिंदी), Assamese (অসমীয়া), Bengali (বাংলা), Hinglish, English, or any regional language. The AI understands the context, extracts high-energy SIF precursors, and calculates precautions.
+                    </div>
+                </div>
+
+                <div class="two-col-grid">
+                    <!-- Form Column -->
+                    <div class="card">
+                        <div class="card-title">
+                            <span>🛡️ Report Details</span>
+                            <div>
+                                <small style="color: #64748b; margin-right: 8px;">Load Pre-set Scenario:</small>
+                                <select id="demoReportSelect" class="form-select" style="display: inline-block; width: auto; font-size: 12px; padding: 3px 8px;">
+                                    <option value="demo-hi">Demo (Hindi): पंप रखरखाव और बिजली का तार (SIF Critical)</option>
+                                    <option value="demo-hinglish">Demo (Hinglish): Mud Pump Hose Phat Gaya</option>
+                                    <option value="demo-1">Demo 1 (English): Electrical Isolation Failure</option>
+                                    <option value="demo-2">Demo 2: Pipeline Inspection (Safe Negation)</option>
+                                    <option value="demo-3">Demo 3: Working at Height without Tie-Off</option>
+                                    <option value="demo-4">Demo 4: Mud Pump Pressure Rupture</option>
+                                </select>
+                                <button id="loadDemoBtn" type="button" class="btn btn-secondary btn-sm" style="margin-left: 4px;">Load Demo</button>
+                            </div>
+                        </div>
+
+                        <!-- Voice Input Widget -->
+                        <div class="voice-panel">
+                            <button type="button" id="voiceMicBtn" class="mic-button" title="Click to speak your safety report">
+                                🎤
+                            </button>
+                            <div class="voice-info">
+                                <div class="voice-title">🎙️ Adaptive Voice Safety Ingestion</div>
+                                <div class="voice-status" id="voiceTranscriptStatus">
+                                    Click the microphone button to dictate in any language. Transcribes automatically and triggers AI analysis after 4.5s of silence.
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="safetyReportForm">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label class="form-label">Worker ID</label>
+                                    <input type="text" id="reportWorkerId" class="form-control" placeholder="Enter Worker ID (e.g. W001)" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Site / Field</label>
+                                    <select id="reportSite" class="form-select">
+                                        <option value="Site A (Duliajan)">Site A (Duliajan Central Field)</option>
+                                        <option value="Site B (Moran)">Site B (Moran Wellhead Complex)</option>
+                                        <option value="Site C (Digboi)">Site C (Digboi Storage & Refinery)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label class="form-label">Location / Work Area</label>
+                                    <input type="text" id="reportLocation" class="form-control" placeholder="e.g. Compressor Bay 2, Rig Floor">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Activity Being Performed</label>
+                                    <select id="reportActivity" class="form-select">
+                                        <option value="Pump / Equipment Maintenance">Pump / Equipment Maintenance</option>
+                                        <option value="Hot Work / Welding">Hot Work / Welding</option>
+                                        <option value="Working at Height / Scaffolding">Working at Height / Scaffolding</option>
+                                        <option value="Pipeline / Valve Operations">Pipeline / Valve Operations</option>
+                                        <option value="Rig Floor & Well Operations">Rig Floor & Well Operations</option>
+                                        <option value="Material Handling & Lifting">Material Handling & Lifting</option>
+                                        <option value="Routine Inspection & Housekeeping">Routine Inspection & Housekeeping</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label class="form-label">Machine / Equipment ID (Optional)</label>
+                                    <input type="text" id="reportMachineId" class="form-control" placeholder="e.g. M101, M102">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Report Category</label>
+                                    <select id="reportType" class="form-select">
+                                        <option value="Unsafe Condition">Unsafe Condition</option>
+                                        <option value="Unsafe Act">Unsafe Act</option>
+                                        <option value="Near Miss">Near Miss</option>
+                                        <option value="Incident">Incident</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Describe What Happened (In ANY Language):</label>
+                                <textarea id="reportDescription" class="form-control" rows="4" placeholder="Type or speak in Hindi, Assamese, Bengali, Hinglish, or English. E.g.: पंप रखरखाव के दौरान बिजली का तार खुला था और आइसोलेशन पूरा नहीं हुआ था..." required></textarea>
+                            </div>
+
+                            <!-- Photographic Evidence Attachment -->
+                            <div class="form-group" style="border: 1px dashed #cbd5e1; border-radius: 8px; padding: 12px; background: #f8fafc; margin-bottom: 14px;">
+                                <label class="form-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span>📸 Attach Field Photographic Evidence (Optional)</span>
+                                    <span style="font-size: 11px; color: #64748b;">Webcam Snapshot or File Upload</span>
+                                </label>
+                                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                    <input type="file" id="reportPhotoInput" accept="image/*" class="form-control" style="font-size: 12px; padding: 5px; flex: 1; min-width: 180px;">
+                                    <button type="button" id="btnReportSnapWebcam" class="btn btn-secondary btn-sm" style="white-space: nowrap;">
+                                        📷 Snap from Camera
+                                    </button>
+                                    <button type="button" id="btnReportClearPhoto" class="btn btn-outline btn-sm" style="display: none;">
+                                        ✕ Remove Photo
+                                    </button>
+                                </div>
+                                <div id="reportPhotoPreviewContainer" style="margin-top: 10px; display: none; text-align: center; background: #ffffff; padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                    <img id="reportPhotoPreview" src="" alt="Report Attachment Preview" style="max-height: 140px; border-radius: 4px; object-fit: contain;">
+                                    <div style="font-size: 11px; color: #059669; margin-top: 4px; font-weight: 600;">✓ Photographic Evidence Attached</div>
+                                </div>
+                                <input type="hidden" id="reportPhotoData" value="">
+                            </div>
+
+                            <button type="submit" id="submitReportBtn" class="btn btn-primary" style="width: 100%;">
+                                🛡️ Analyze &amp; Submit Report
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- AI Analysis Result Column -->
+                    <div class="card" id="aiAnalysisResultCard" style="display: none;">
+                        <div class="card-title">
+                            <span>AI Risk &amp; SIF Analysis</span>
+                            <span class="badge badge-low">Explainable AI</span>
+                        </div>
+                        <!-- Content rendered dynamically via app.js -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 3.5: WORKER POST-REPAIR REVIEW ==================== -->
+            <section id="tab-repair-review" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Machine Post-Repair Verification</h1>
+                        <p class="page-desc">Workers and technicians inspect repaired equipment, verify restored safety barriers, and sign off to return machine to active duty.</p>
+                    </div>
+                </div>
+
+                <div class="two-col-grid">
+                    <div class="card">
+                        <div class="card-title">
+                            <span>Submit Post-Repair Review</span>
+                        </div>
+                        <form id="repairReviewForm">
+                            <div class="form-group">
+                                <label class="form-label">Equipment to Inspect *</label>
+                                <select id="repairMachineId" class="form-select">
+                                    <option value="M101">Main Gas Compressor C-12 (M101) — Overdue</option>
+                                    <option value="M102">High-Pressure Mud Pump P-07 (M102) — Overdue / Interlocked</option>
+                                    <option value="M103">Main Power Generator G-04 (M103)</option>
+                                    <option value="M104">ESD Wellhead Valve V-19 (M104)</option>
+                                    <option value="M105">Rig Mast Drilling Hoist H-02 (M105)</option>
+                                </select>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label class="form-label">Inspecting Worker ID</label>
+                                    <input type="text" id="repairWorkerId" class="form-control" placeholder="Enter Worker ID" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Worker Name</label>
+                                    <input type="text" id="repairWorkerName" class="form-control" placeholder="Enter Worker Name" value="" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Repair Inspection Status *</label>
+                                <select id="repairStatusSelect" class="form-select">
+                                    <option value="REPAIRED & VERIFIED">✓ REPAIRED &amp; VERIFIED SAFE</option>
+                                    <option value="PENDING PARTS">⚠️ PENDING ADDITIONAL PARTS</option>
+                                    <option value="RE-INSPECTION REQ">✗ DEFECT PERSISTS (RE-INSPECTION REQUIRED)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Inspection Observations &amp; Verification Notes *</label>
+                                <textarea id="repairObservations" class="form-control" rows="3" placeholder="Describe tests performed (e.g. pressure test at 3000 PSI passed, electrical grounding verified, guard reinstalled)." required></textarea>
+                            </div>
+
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;">
+                                    <input type="checkbox" id="repairVerifiedSafe" checked style="width: 16px; height: 16px;">
+                                    <span>I verify that all safety interlocks and protective barriers are intact and nominal.</span>
+                                </label>
+                            </div>
+
+                            <button type="submit" id="submitRepairBtn" class="btn btn-success" style="width: 100%; font-weight: 700;">
+                                ✓ Submit Review &amp; Restore Machine Status
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Recent Repair Reviews Table -->
+                    <div class="card">
+                        <div class="card-title">
+                            <span>Recent Post-Repair Sign-offs</span>
+                            <small style="color: #64748b;">HSE Audit Record</small>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Machine</th>
+                                        <th>Worker</th>
+                                        <th>Status</th>
+                                        <th>Observations</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="repairReviewsTableBody">
+                                    <tr><td colspan="5" style="text-align:center; padding: 20px;">Loading repair history...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 4: HSE RISK PRIORITY ==================== -->
+            <section id="tab-priority" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">HSE Risk Priority Ranking</h1>
+                        <p class="page-desc">Dynamically triaged priority ranking combining risk severity, SIF potential, line-of-fire exposure, and machine urgency.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary btn-sm" onclick="loadPriorityList()">🔄 Refresh Ranking</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Priority</th>
+                                    <th>Report ID</th>
+                                    <th>Site</th>
+                                    <th>Detected Hazard</th>
+                                    <th>Risk Level</th>
+                                    <th>SIF Precursor</th>
+                                    <th>Worker Exposure</th>
+                                    <th>Machine Status</th>
+                                    <th>Ranking Rationale</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="priorityTableBody">
+                                <!-- Populated by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 5: INTERVENTIONS ==================== -->
+            <section id="tab-intervention" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Intervention Priority Kanban</h1>
+                        <p class="page-desc">Time-bound response swimlanes to mitigate SIF precursors before catastrophic energy release occurs.</p>
+                    </div>
+                </div>
+
+                <div class="kanban-grid">
+                    <div class="kanban-col immediate">
+                        <div class="kanban-col-header">
+                            <span>🔴 IMMEDIATE (STOP WORK)</span>
+                        </div>
+                        <div id="kanbanImmediate"></div>
+                    </div>
+
+                    <div class="kanban-col within_24h">
+                        <div class="kanban-col-header">
+                            <span>🟠 WITHIN 24 HOURS</span>
+                        </div>
+                        <div id="kanbanWithin24h"></div>
+                    </div>
+
+                    <div class="kanban-col within_3d">
+                        <div class="kanban-col-header">
+                            <span>🟡 WITHIN 3 DAYS</span>
+                        </div>
+                        <div id="kanbanWithin3d"></div>
+                    </div>
+
+                    <div class="kanban-col planned">
+                        <div class="kanban-col-header">
+                            <span>🟢 PLANNED / ROUTINE</span>
+                        </div>
+                        <div id="kanbanPlanned"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 6: MACHINE MAINTENANCE ==================== -->
+            <section id="tab-machines" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Machine Safety &amp; Maintenance</h1>
+                        <p class="page-desc">Track equipment inspection deadlines, dynamic overdue days, and simulate safety interlocks.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="background: #fffbeb; border-color: #fde68a; margin-bottom: 16px;">
+                    <div style="font-size: 12px; color: #92400e; line-height: 1.5;">
+                        <strong>⚠️ Industrial Safety Disclaimer:</strong> Prototype interlock is a software simulation. Real industrial machine control requires certified safety hardware, PLC/interlock systems, Lockout/Tagout (LOTO) protocols, and authorized safety procedures.
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Machine ID</th>
+                                    <th>Equipment Name</th>
+                                    <th>Site</th>
+                                    <th>Last Maintenance</th>
+                                    <th>Due Date</th>
+                                    <th>Days Remaining / Overdue</th>
+                                    <th>Base Risk</th>
+                                    <th>Interlock Status</th>
+                                    <th>Interlock Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="machinesTableBody">
+                                <!-- Populated by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 7: HSE REVIEW QUEUE ==================== -->
+            <section id="tab-hse-review" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">HSE Human-in-the-Loop Review</h1>
+                        <p class="page-desc">Verify, correct, or reject AI-generated safety predictions to ensure accountability and feed model learning.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <span>Reports Awaiting HSE Officer Action</span>
+                    </div>
+                    <p style="font-size: 13px; color: #64748b; margin-bottom: 14px;">
+                        Open any report from the <strong>HSE Risk Priority</strong> or <strong>Report History</strong> tabs to review, adjust risk factors, assign responsible persons, and record feedback.
+                    </p>
+                    <button class="btn btn-primary btn-sm" onclick="document.querySelector('[data-tab=\'priority\']').click()">
+                        Go to Risk Priority List
+                    </button>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 9: REPORT HISTORY ==================== -->
+            <section id="tab-reports" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Report History &amp; Audit Trail</h1>
+                        <p class="page-desc">Comprehensive register of all field safety observations and their full lifecycle resolution state.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="historyRiskFilter" class="form-select" style="width: auto; font-size: 12px;" onchange="loadReportsHistory()">
+                            <option value="">All Risk Levels</option>
+                            <option value="CRITICAL">Critical Only</option>
+                            <option value="HIGH">High Only</option>
+                            <option value="MEDIUM">Medium Only</option>
+                            <option value="LOW">Low Only</option>
+                        </select>
+                        <select id="historySifFilter" class="form-select" style="width: auto; font-size: 12px;" onchange="loadReportsHistory()">
+                            <option value="">All SIF Status</option>
+                            <option value="1">SIF Potential Only</option>
+                            <option value="0">Non-SIF Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Report ID</th>
+                                    <th>Date &amp; Time</th>
+                                    <th>Worker</th>
+                                    <th>Site</th>
+                                    <th>Channel</th>
+                                    <th>Hazard</th>
+                                    <th>Risk Level</th>
+                                    <th>SIF</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsHistoryTableBody">
+                                <!-- Populated by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 10: SAFETY ANALYTICS ==================== -->
+            <section id="tab-analytics" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Safety Intelligence &amp; Analytics</h1>
+                        <p class="page-desc">Executive insights, systemic precursor tracking, and multi-dimensional hazard distributions.</p>
+                    </div>
+                </div>
+
+                <div class="two-col-grid">
+                    <div class="card">
+                        <div class="card-title">Site-Wise Risk Breakdown</div>
+                        <div style="height: 250px; position: relative;">
+                            <canvas id="chartSiteAnalytics"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Safety Action Lifecycle Resolution</div>
+                        <div style="height: 250px; position: relative;">
+                            <canvas id="chartLifecycle"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <span>Top Recurring SIF Precursors</span>
+                        <small style="color: #64748b;">Systemic oilfield failure patterns</small>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>SIF Precursor Pattern</th>
+                                    <th>Frequency</th>
+                                    <th>Average Risk</th>
+                                    <th>Affected Sites</th>
+                                    <th>30-Day Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topPrecursorsTableBody">
+                                <!-- Populated by charts.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 11: AI LEARNING & FEEDBACK ==================== -->
+            <section id="tab-feedback" class="page-tab">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Continuous Learning &amp; AI Feedback</h1>
+                        <p class="page-desc">Human-in-the-loop recalibration loop tracking AI concordance with senior HSE officers.</p>
+                    </div>
+                </div>
+
+                <!-- Highlighted NLP Model Architecture Card -->
+                <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid #38bdf8; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; color: #f8fafc; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="font-size: 16px;">🛡️</span>
+                            <strong style="font-size: 13.5px; color: #38bdf8; letter-spacing: 0.5px;">ACTIVE NLP MODEL: Domain-Specific Hybrid Bi-Encoder Transformer</strong>
+                            <span class="badge badge-low" style="background:#0284c7; color:#fff; font-size: 10px;">v2.6 OIL-Trained</span>
+                        </div>
+                        <div style="font-size: 12px; color: #94a3b8; line-height: 1.4;">
+                            Architecture integrates DistilBERT/MiniLM contextual embeddings, IOGP/OSHA 2026 Precursor Cosine Proximity Engine, Syntactic Negation Scope Classifier, and mBART Multilingual Vector Tokenizer. Learns dynamically from HSE officer overrides.
+                        </div>
+                    </div>
+                    <div style="font-family: monospace; font-size: 11px; background: rgba(56, 189, 248, 0.1); border: 1px solid #0284c7; padding: 6px 12px; border-radius: 6px; color: #38bdf8;">
+                        Semantic Loss: 0.042 • Concordance: 81.2%
+                    </div>
+                </div>
+
+                <div class="grid-kpis">
+                    <div class="kpi-card info">
+                        <div class="kpi-title">AI Predictions</div>
+                        <div class="kpi-val" id="learnPredictionsCount">--</div>
+                        <div class="kpi-sub">Total inferences run</div>
+                    </div>
+                    <div class="kpi-card safe">
+                        <div class="kpi-title">HSE Accepted</div>
+                        <div class="kpi-val" id="learnAcceptedCount" style="color: #047857;">--</div>
+                        <div class="kpi-sub">Concurred without edits</div>
+                    </div>
+                    <div class="kpi-card warning">
+                        <div class="kpi-title">HSE Corrected</div>
+                        <div class="kpi-val" id="learnCorrectedCount" style="color: #b45309;">--</div>
+                        <div class="kpi-sub">Refined by officer</div>
+                    </div>
+                    <div class="kpi-card info">
+                        <div class="kpi-title">Initial Accuracy</div>
+                        <div class="kpi-val" id="learnInitialAcc">72.4%</div>
+                        <div class="kpi-sub">Base NLP model</div>
+                    </div>
+                    <div class="kpi-card safe">
+                        <div class="kpi-title">Current Accuracy</div>
+                        <div class="kpi-val" id="learnCurrentAcc" style="color: #059669;">81.2%</div>
+                        <div class="kpi-sub">With active HSE feedback</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <span>Recent HSE Feedback Log (Continuous Improvement Stream)</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Report ID</th>
+                                    <th>Officer Feedback / Correction Notes</th>
+                                    <th>Model Version</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody id="learningFeedbackTableBody">
+                                <!-- Populated by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+ 
+             <!-- ==================== TAB 12: PERSONNEL PROFILE & SAFETY DOSSIER ==================== -->
+             <section id="tab-profile" class="page-tab">
+                 <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                     <div>
+                         <div style="display: flex; align-items: center; gap: 8px;">
+                             <h1 class="page-title" style="margin-bottom: 0;">Personnel Profile &amp; Safety Dossier</h1>
+                             <span class="badge badge-low" id="dossierRoleBadge">HSE OFFICER</span>
+                         </div>
+                         <p class="page-desc" style="margin-top: 4px;">
+                             Official Oil India Limited field record, certified safety credentials, biometric enrollment status, and complete hazard lifecycle history.
+                         </p>
+                     </div>
+                     <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn btn-secondary btn-sm" onclick="loadUserProfile()" title="Refresh dossier data">
+                            🔄 Refresh Dossier
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="document.getElementById('authPortalModal').classList.add('show')">
+                            🔑 Switch Account / Register
+                        </button>
+                        <button class="btn btn-danger btn-sm" id="dossierLogoutBtn" onclick="handleUserLogout()" title="Log out of session" style="background: #ef4444; border-color: #dc2626; color: #ffffff; font-weight: 700;">
+                            🚪 Log Out
+                        </button>
+                    </div>
+                </div>
+ 
+                 <!-- Identity Hero Card -->
+                 <div class="card" style="margin-bottom: 20px; border-top: 4px solid var(--brand-accent);">
+                     <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center;">
+                         <!-- Avatar + Biometric Pill -->
+                         <div style="text-align: center; min-width: 140px;">
+                             <div id="dossierAvatar" style="width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #0f2744 0%, #0284c7 100%); color: #ffffff; font-size: 34px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; box-shadow: 0 4px 10px rgba(2,132,199,0.3); border: 3px solid #ffffff;">
+                                 👤
+                             </div>
+                             <div id="dossierFaceBadge" class="badge badge-low" style="font-size: 11px; padding: 4px 8px;">
+                                 📷 Biometrics Verified
+                             </div>
+                         </div>
+ 
+                         <!-- Main Identity Meta -->
+                         <div style="flex: 1; min-width: 260px;">
+                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                                 <h2 id="dossierName" style="font-size: 22px; font-weight: 800; color: #0f2744;">Loading Profile...</h2>
+                                 <span class="badge" id="dossierStatusPill" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-weight: 700;">● ACTIVE ON DUTY</span>
+                             </div>
+                             <div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #475569; margin-top: 8px;">
+                                 <div><strong style="color: #0f172a;">Worker / Badge ID:</strong> <code id="dossierWorkerId" style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight: 700;">—</code></div>
+                                 <div><strong style="color: #0f172a;">Username:</strong> <span id="dossierUsername">—</span></div>
+                                 <div><strong style="color: #0f172a;">Department:</strong> <span id="dossierDepartment">—</span></div>
+                                 <div><strong style="color: #0f172a;">Station / Site:</strong> <span id="dossierSite">—</span></div>
+                             </div>
+                             <div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 12.5px; color: #64748b; margin-top: 8px;">
+                                 <div><strong>Contact:</strong> <span id="dossierPhone">—</span></div>
+                                 <div><strong>Field Base:</strong> <span id="dossierAddress">—</span></div>
+                                 <div><strong>Enrolled Date:</strong> <span id="dossierCreatedAt">—</span></div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+ 
+                 <!-- Operational Safety Footprint KPIs -->
+                 <div class="grid-kpis" style="margin-bottom: 20px;">
+                     <div class="kpi-card info">
+                         <div class="kpi-title">Observations Logged</div>
+                         <div class="kpi-val" id="dossierKpiReports">--</div>
+                         <div class="kpi-sub">Total safety reports submitted</div>
+                     </div>
+                     <div class="kpi-card critical">
+                         <div class="kpi-title">SIF Precursors</div>
+                         <div class="kpi-val" id="dossierKpiSifs" style="color: #b91c1c;">--</div>
+                         <div class="kpi-sub">High-energy precursor events</div>
+                     </div>
+                     <div class="kpi-card safe">
+                         <div class="kpi-title">Verified &amp; Closed</div>
+                         <div class="kpi-val" id="dossierKpiClosed" style="color: #059669;">--</div>
+                         <div class="kpi-sub">Mitigated safety actions</div>
+                     </div>
+                     <div class="kpi-card warning">
+                         <div class="kpi-title">Machine Inspections</div>
+                         <div class="kpi-val" id="dossierKpiRepairs" style="color: #d97706;">--</div>
+                         <div class="kpi-sub">Post-repair sign-offs recorded</div>
+                     </div>
+                 </div>
+ 
+                 <!-- Safety Compliance & Mandatory PPE Allocation Grid -->
+                 <div class="card" style="margin-bottom: 20px;">
+                     <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                         <span>🛡️ Mandatory Oilfield Compliance &amp; PPE Readiness Dossier</span>
+                         <span class="badge badge-low" id="dossierComplianceStatus">100% COMPLIANT</span>
+                     </div>
+                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px;">
+                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+                             <div style="font-size: 22px;">📜</div>
+                             <div style="flex:1;">
+                                 <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Safety Induction</div>
+                                 <div style="font-size: 13px; font-weight: 700; color: #059669;" id="dossierTrainingCert">✓ Certified Valid</div>
+                             </div>
+                         </div>
+                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+                             <div style="font-size: 22px;">🩺</div>
+                             <div style="flex:1;">
+                                 <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Medical Fitness</div>
+                                 <div style="font-size: 13px; font-weight: 700; color: #059669;" id="dossierMedicalCert">✓ Fit for Rig Duty</div>
+                             </div>
+                         </div>
+                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+                             <div style="font-size: 22px;">⛑️</div>
+                             <div style="flex:1;">
+                                 <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Hard Hat / Safety Cap</div>
+                                 <div style="font-size: 13px; font-weight: 700; color: #059669;" id="dossierPpeHelmet">✓ Assigned &amp; Inspected</div>
+                             </div>
+                         </div>
+                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+                             <div style="font-size: 22px;">🦺</div>
+                             <div style="flex:1;">
+                                 <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Hi-Vis Safety Vest</div>
+                                 <div style="font-size: 13px; font-weight: 700; color: #059669;" id="dossierPpeVest">✓ Assigned &amp; Inspected</div>
+                             </div>
+                         </div>
+                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+                             <div style="font-size: 22px;">🧤</div>
+                             <div style="flex:1;">
+                                 <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Industrial Gloves</div>
+                                 <div style="font-size: 13px; font-weight: 700; color: #059669;" id="dossierPpeGloves">✓ Assigned &amp; Inspected</div>
+                             </div>
+                         </div>
+                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+                             <div style="font-size: 22px;">🥾</div>
+                             <div style="flex:1;">
+                                 <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Steel-Toe Safety Shoes</div>
+                                 <div style="font-size: 13px; font-weight: 700; color: #059669;" id="dossierPpeShoes">✓ Assigned &amp; Inspected</div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+ 
+                 <!-- ================= ROLE-TAILORED SECTION 1: WORKER PAST REPORTS & SOLUTIONS ================= -->
+                 <div id="dossierWorkerView" style="display: block;">
+                     <div class="card" style="margin-bottom: 20px;">
+                         <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                             <div>
+                                 <span style="font-size: 15px;">📋 Past Incident &amp; Hazard Reports Submitted</span>
+                                 <div style="font-size: 12px; color: #64748b; font-weight: 400; margin-top: 2px;">
+                                     Observations reported by this personnel, with AI risk classifications, SIF precursor flags, and assigned corrective solutions.
+                                 </div>
+                             </div>
+                             <span class="badge badge-low" id="dossierWorkerReportCount">0 Reports</span>
+                         </div>
+                         <div class="table-responsive" style="margin-top: 12px;">
+                             <table class="table">
+                                 <thead>
+                                     <tr>
+                                         <th>Report ID</th>
+                                         <th>Date &amp; Site</th>
+                                         <th>Observation Narrative</th>
+                                         <th>AI Hazard Classification</th>
+                                         <th>Risk Score &amp; SIF</th>
+                                         <th>Assigned Corrective Solution</th>
+                                         <th>Status</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody id="dossierWorkerReportsTableBody">
+                                     <tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">Loading reports...</td></tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+ 
+                 <!-- ================= ROLE-TAILORED SECTION 2: HSE AUDIT & HUMAN-IN-THE-LOOP REVIEWS ================= -->
+                 <div id="dossierHSEView" style="display: none;">
+                     <div class="card" style="margin-bottom: 20px;">
+                         <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                             <div>
+                                 <span style="font-size: 15px;">🛡️ Supervised Human-in-the-Loop Reviews &amp; Calibrations</span>
+                                 <div style="font-size: 12px; color: #64748b; font-weight: 400; margin-top: 2px;">
+                                     Audit trail of safety decisions, risk adjustments, and continuous feedback notes logged by this HSE officer.
+                                 </div>
+                             </div>
+                             <span class="badge badge-low" id="dossierHseReviewCount">0 Reviews</span>
+                         </div>
+                         <div class="table-responsive" style="margin-top: 12px;">
+                             <table class="table">
+                                 <thead>
+                                     <tr>
+                                         <th>Audit ID</th>
+                                         <th>Report UID &amp; Hazard</th>
+                                         <th>Officer Decision</th>
+                                         <th>Risk Shift (AI → Human)</th>
+                                         <th>SIF Determination</th>
+                                         <th>Officer Feedback / Learning Notes</th>
+                                         <th>Date Logged</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody id="dossierHseReviewsTableBody">
+                                     <tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">Loading reviews...</td></tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+ 
+                 <!-- ================= COMMON SECTION: POST-REPAIR & MAINTENANCE REVIEWS ================= -->
+                 <div class="card">
+                     <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                         <div>
+                             <span style="font-size: 15px;">⚙️ Post-Repair &amp; Machine Certification Sign-Offs</span>
+                             <div style="font-size: 12px; color: #64748b; font-weight: 400; margin-top: 2px;">
+                                 Equipment clearance verification records associated with this personnel.
+                             </div>
+                         </div>
+                         <span class="badge badge-low" id="dossierRepairsCount">0 Sign-Offs</span>
+                     </div>
+                     <div class="table-responsive" style="margin-top: 12px;">
+                         <table class="table">
+                             <thead>
+                                 <tr>
+                                     <th>Machine ID</th>
+                                     <th>Repair Activity</th>
+                                     <th>Inspector / Tech</th>
+                                     <th>Guard &amp; Interlock Status</th>
+                                     <th>Machine Cleared?</th>
+                                     <th>Verification Notes</th>
+                                     <th>Signed At</th>
+                                 </tr>
+                             </thead>
+                             <tbody id="dossierRepairsTableBody">
+                                 <tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">Loading repair history...</td></tr>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div>
+                <strong>SurakshaX</strong> • Oil India Limited Prototype • Smart India Hackathon 2026
+            </div>
+            <div class="disclaimer-badge">
+                AI recommendations are decision-support only. Final safety authority remains with certified HSE personnel.
+            </div>
+        </footer>
+    </div>
+
+    <!-- ==================== FIRST POPUP: ROLE SELECTOR + AUTH & REGISTRATION MODAL ==================== -->
+    <div id="authPortalModal" class="auth-portal-backdrop show">
+        <div class="auth-portal-dialog">
+            <canvas id="regConfettiCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 95; border-radius: 12px; display: none;"></canvas>
+            <button type="button" class="auth-modal-close-btn" onclick="closeAuthModal()" title="Close Portal">✕</button>
+            <div id="authPortalHeader" style="text-align: center; margin-bottom: 16px;">
+                <div style="font-size: 36px;">🛡️</div>
+                <h2 id="authPortalTitleText" style="font-size: 20px; font-weight: 800; color: #0f2744; margin-top: 4px;">Welcome to SurakshaX Portal</h2>
+                <p id="authPortalSubText" style="font-size: 12.5px; color: #64748b;">Select your access type below to continue.</p>
+            </div>
+
+            <!-- ==================== STEP 1: FIRST POPUP WINDOW (WORKER DIRECT vs OTHER ROLE SIGN-IN) ==================== -->
+            <div id="authViewRoleGate">
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <!-- OPTION 1: IF WORKER -> DIRECT TO WORKER PORTAL (NO SIGN IN) -->
+                    <div onclick="window.selectPortalMenu('worker')" style="cursor: pointer; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 2px solid #10b981; border-radius: 12px; padding: 16px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 28px;">👷</span>
+                                <div>
+                                    <div style="font-size: 16px; font-weight: 800; color: #065f46;">I am a Worker</div>
+                                    <div style="font-size: 11.5px; font-weight: 700; color: #047857;">Direct Access • No Sign-In Required</div>
+                                </div>
+                            </div>
+                            <span style="background: #10b981; color: #ffffff; font-weight: 800; font-size: 12px; padding: 6px 12px; border-radius: 8px;">Enter Now ➔</span>
+                        </div>
+                        <div style="font-size: 12px; color: #065f46; line-height: 1.4;">
+                            Go directly to the <strong>Simple Worker Portal</strong> (Smart Entry Gate Pass, Multilingual Report &amp; Post-Repair Review).
+                        </div>
+                    </div>
+
+                    <!-- OPTION 2: IF OTHER -> ASK WHAT ROLE & OPEN SIGN-IN PAGE -->
+                    <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 12px; padding: 16px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <span style="font-size: 26px;">🛡️</span>
+                            <div>
+                                <div style="font-size: 15.5px; font-weight: 800; color: #0f2744;">Other Role (Official / Supervisor / Admin)</div>
+                                <div style="font-size: 11.5px; color: #64748b;">Select who you are to open the Sign-In page:</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                            <button type="button" onclick="window.chooseOtherRoleAndSignIn('HSE Officer / Inspector', 'hse')" style="width: 100%; text-align: left; background: #ffffff; border: 1.5px solid #93c5fd; border-radius: 8px; padding: 10px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-weight: 700; color: #1e3a8a; font-size: 13px; transition: all 0.15s;">
+                                <span>🛡️ HSE Officer / Safety Inspector</span>
+                                <span style="color: #0284c7; font-size: 12px;">Sign In ➔</span>
+                            </button>
+                            <button type="button" onclick="window.chooseOtherRoleAndSignIn('Digital Safety Admin', 'admin')" style="width: 100%; text-align: left; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-weight: 700; color: #0f2744; font-size: 13px; transition: all 0.15s;">
+                                <span>⚙️ Digital Safety Admin / Plant Manager</span>
+                                <span style="color: #0284c7; font-size: 12px;">Sign In ➔</span>
+                            </button>
+                            <button type="button" onclick="window.chooseOtherRoleAndSignIn('Visiting Mechanic / Contractor', 'mechanic')" style="width: 100%; text-align: left; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-weight: 700; color: #334155; font-size: 13px; transition: all 0.15s;">
+                                <span>🔧 Visiting Mechanic / Contractor</span>
+                                <span style="color: #0284c7; font-size: 12px;">Sign In ➔</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- QUICK NEW REGISTRATION LINK -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 6px; border-top: 1px solid #e2e8f0; font-size: 12px;">
+                        <span style="color: #64748b;">New personnel enrollment?</span>
+                        <button type="button" onclick="window.openAuthPortal('register')" style="background: none; border: none; color: #0284c7; font-weight: 800; cursor: pointer; font-size: 12.5px; text-decoration: underline;">
+                            📸 Open New Face Registration
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs: Sign In vs New Registration (Hidden on initial Role Gate step) -->
+            <div id="authTabsRow" style="display: none; gap: 8px; margin-bottom: 16px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="window.openRoleGatePopup()" style="padding: 6px 10px; font-weight: 700;" title="Back to Role Selection">
+                    ⬅️ Back
+                </button>
+                <button type="button" id="tabBtnSignIn" class="auth-tab-btn active" onclick="switchAuthTab('signin')" style="flex: 1;">
+                    🔑 Sign In / Login
+                </button>
+                <button type="button" id="tabBtnRegister" class="auth-tab-btn" onclick="switchAuthTab('register')" style="flex: 1;">
+                    📸 New Face Registration
+                </button>
+            </div>
+
+            <!-- SIGN IN VIEW (ONLY USERNAME / WORKER ID AND PASSWORD) -->
+            <div id="authViewSignIn" style="display: none;">
+                <form id="signInForm">
+                    <div id="loginContextNotice" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 9px 12px; margin-bottom: 12px; color: #1e40af; font-size: 12px; font-weight: 600; line-height: 1.4;">
+                        🛡️ <strong>Official Role Sign-In:</strong> Please sign in with your credentials to continue.
+                    </div>
+
+                    <div id="loginErrorAlert" style="display: none; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; color: #b91c1c; font-size: 12.5px; line-height: 1.4;">
+                        <!-- Dynamic Error Message -->
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Username / Worker ID *</label>
+                        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your Username or Worker ID" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label class="form-label">Password *</label>
+                            <span style="font-size: 11px; color: #0284c7; cursor: pointer;" onclick="togglePasswordVisibility('loginPassword')">Show/Hide</span>
+                        </div>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 16px;">
+                        <button type="button" class="btn btn-secondary" style="font-weight: 700; padding: 10px 14px; font-size: 12.5px;" onclick="window.selectPortalMenu('worker')">
+                            👷 Worker Portal (No Login)
+                        </button>
+                        <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="flex: 1; font-weight: 700; padding: 10px; font-size: 13.5px;">
+                            🔑 Sign In to Portal
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- NEW REGISTRATION VIEW (WITH WEBCAM FACE TRAINING) -->
+            <div id="authViewRegister" style="display: none;">
+                <form id="registerForm">
+                    <div id="regErrorAlert" style="display: none; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; color: #b91c1c; font-size: 12.5px; line-height: 1.4;">
+                    </div>
+
+                    <!-- Role Selector Dropdown (Registration Only) -->
+                    <div id="authRoleSelectGroup" class="form-group" style="margin-bottom: 14px;">
+                        <label class="form-label" style="font-weight: 700;">Operational Role / Trade:</label>
+                        <select id="portalRoleSelect" class="form-select" style="font-size: 13.5px; padding: 10px; font-weight: 600;">
+                            <option value="worker">👷 Worker / Rig Technician</option>
+                            <option value="hse">🛡️ HSE Officer / Inspector</option>
+                            <option value="admin">⚙️ Digital Safety Admin</option>
+                            <option value="mechanic">🔧 Visiting Mechanic / Contractor</option>
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px;">
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" id="regName" class="form-control" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Worker / Badge ID <small style="color: #64748b;">(Optional)</small></label>
+                            <input type="text" id="regWorkerId" class="form-control" placeholder="Auto-generated if blank">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group">
+                            <label class="form-label">Create Password *</label>
+                            <input type="password" id="regPassword" class="form-control" placeholder="Min. 4 characters" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password *</label>
+                            <input type="password" id="regConfirmPassword" class="form-control" placeholder="Re-type password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 700;">Department / Field</label>
+                        <select id="regDepartment" class="form-select" style="font-size: 13.5px; padding: 10px; font-weight: 600;">
+                            <option value="Drilling &amp; Operations">Drilling &amp; Operations</option>
+                            <option value="Production &amp; Wellhead">Production &amp; Wellhead</option>
+                            <option value="Pipeline &amp; Mechanical Maintenance">Pipeline &amp; Mechanical Maintenance</option>
+                            <option value="Electrical &amp; Instrumentation">Electrical &amp; Instrumentation</option>
+                            <option value="HSE &amp; Fire Safety">HSE &amp; Fire Safety</option>
+                            <option value="Refinery &amp; Gas Processing">Refinery &amp; Gas Processing</option>
+                            <option value="Rig Floor &amp; Workover">Rig Floor &amp; Workover</option>
+                            <option value="Logistics &amp; Plant Operations">Logistics &amp; Plant Operations</option>
+                        </select>
+                    </div>
+
+                    <!-- Webcam Face Biometric Training Box (Phone Face ID System) -->
+                    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 13px; margin-bottom: 14px; box-shadow: 0 2px 6px -1px rgba(0,0,0,0.06);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 12.5px; font-weight: 800; color: #0f2744;">Face ID Biometric</span>
+                            <span id="regFaceCounterBadge" class="badge badge-low" style="font-size: 11px; font-weight: 700;">0 / 50 Samples</span>
+                        </div>
+
+                        <!-- Single Camera View: Clean live camera stream without voice command banner -->
+                        <div class="face-capture-box" style="height: 220px; background: #070b13; position: relative; overflow: hidden; border-radius: 8px; border: 1.5px solid #1e293b;">
+                            <video id="regVideoElement" autoplay playsinline muted style="position: absolute; opacity: 0; pointer-events: none; width: 320px; height: 240px; top: -9999px; left: -9999px;"></video>
+                            <canvas id="regCanvasElement" width="340" height="220" style="width: 100%; height: 100%; object-fit: cover; display: none;"></canvas>
+                            <div id="regCameraPlaceholder" style="color: #94a3b8; font-size: 11.5px; text-align: center; padding: 36px 16px;">
+                                <div style="font-size: 38px; margin-bottom: 8px;">📷</div>
+                                <div style="font-weight: 700; color: #e2e8f0; margin-bottom: 4px; font-size: 13px;">Camera Preview Standby</div>
+                                <div>Click <strong>Start Camera</strong> or click <strong>Register</strong> to scan &amp; enroll.</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; margin-top: 10px;">
+                            <button type="button" id="regStartCamBtn" class="btn btn-secondary btn-sm" style="width: 100%;" onclick="startRegCamera()">
+                                📹 Start Camera
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 14px;">
+                        <button type="button" class="btn btn-secondary" style="font-weight: 700; padding: 10px 18px; font-size: 13.5px;" onclick="closeAuthModal()">
+                            ✕ Cancel / Close
+                        </button>
+                        <button type="submit" id="regSubmitBtn" class="btn btn-success" style="flex: 1; font-weight: 700; padding: 10px; font-size: 14px;">
+                            Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- REGISTRATION SUCCESS CELEBRATION VIEW -->
+            <div id="authViewSuccess" style="display: none; text-align: center; padding: 6px 0 10px 0;">
+                <div class="success-checkmark-wrapper" style="margin: 0 auto 12px; width: 76px; height: 76px;">
+                    <svg class="checkmark-svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="24" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+
+                <div style="display: inline-block; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 9999px; padding: 4px 14px; margin-bottom: 8px;">
+                    <span style="color: #059669; font-weight: 800; font-size: 11.5px; letter-spacing: 0.5px; text-transform: uppercase;">✓ Enrollment Verified &amp; Saved</span>
+                </div>
+
+                <h3 style="color: #0f2744; font-size: 22px; font-weight: 800; margin: 0 0 6px 0;">Registration Completed!</h3>
+                <p style="color: #475569; font-size: 13px; margin: 0 0 16px 0;">Biometric profile enrolled and OpenCV neural recognition model trained successfully.</p>
+
+                <!-- Digital Enrolled Worker Identity Card -->
+                <div style="background: linear-gradient(135deg, #0b1329 0%, #1e293b 100%); border: 1.5px solid #10b981; border-radius: 12px; padding: 16px; margin-bottom: 18px; text-align: left; box-shadow: 0 12px 28px -6px rgba(16, 185, 129, 0.25); position: relative; overflow: hidden;">
+                    <div style="position: absolute; right: -20px; bottom: -20px; font-size: 80px; opacity: 0.07; pointer-events: none;">🛡️</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 20px;">🛡️</span>
+                            <div>
+                                <div style="color: #f8fafc; font-weight: 800; font-size: 13px; letter-spacing: 0.5px;">SURAKSHAX INDUSTRIAL PASS</div>
+                                <div style="color: #94a3b8; font-size: 10.5px;">OIL INDIA LIMITED • BIOMETRIC BADGE</div>
+                            </div>
+                        </div>
+                        <span class="badge" style="background: #10b981; color: white; font-weight: 700; font-size: 10.5px; padding: 4px 8px; border-radius: 4px; box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);">ACTIVE</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; font-size: 12px;">
+                        <div>
+                            <div style="color: #94a3b8; font-size: 10.5px; text-transform: uppercase;">Worker Name</div>
+                            <div id="regSuccessName" style="color: #ffffff; font-weight: 700; font-size: 14.5px;">--</div>
+                        </div>
+                        <div>
+                            <div style="color: #94a3b8; font-size: 10.5px; text-transform: uppercase;">Worker ID</div>
+                            <div id="regSuccessWorkerId" style="color: #38bdf8; font-weight: 800; font-family: monospace; font-size: 14.5px;">--</div>
+                        </div>
+                        <div>
+                            <div style="color: #94a3b8; font-size: 10.5px; text-transform: uppercase;">Operational Role</div>
+                            <div id="regSuccessRole" style="color: #e2e8f0; font-weight: 600;">--</div>
+                        </div>
+                        <div>
+                            <div style="color: #94a3b8; font-size: 10.5px; text-transform: uppercase;">Department</div>
+                            <div id="regSuccessDept" style="color: #e2e8f0; font-weight: 600;">--</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #334155; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #10b981;">
+                        <span>✓ Biometric Face Model Synced</span>
+                        <span>🟢 Clearance: Safety Gate Ready</span>
+                    </div>
+                </div>
+
+                <!-- Auto-Countdown Progress Bar -->
+                <div style="margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #64748b; margin-bottom: 5px;">
+                        <span>Auto-proceeding to AI Safety Gate...</span>
+                        <span id="regSuccessTimer" style="font-weight: 700; color: #0284c7;">3s</span>
+                    </div>
+                    <div style="width: 100%; height: 5px; background: #e2e8f0; border-radius: 9999px; overflow: hidden;">
+                        <div id="regSuccessProgressBar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #10b981, #0284c7); border-radius: 9999px; transition: width 0.1s linear;"></div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn btn-secondary" style="font-weight: 600; padding: 10px 16px; font-size: 13px;" onclick="closeAuthModal()">
+                        Dashboard
+                    </button>
+                    <button type="button" id="regSuccessProceedBtn" class="btn btn-success" style="flex: 1; font-weight: 700; padding: 10px 14px; font-size: 13.5px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);">
+                        🚀 Proceed to AI Safety Gate Turnstile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== HSE REVIEW MODAL ==================== -->
+    <div id="hseReviewModal" class="modal-backdrop">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title">🛡️ HSE Human-in-the-Loop Review</h3>
+                    <div style="font-size: 12px; color: #64748b;">Report ID: <span id="modalReportUid">--</span></div>
+                </div>
+                <button class="modal-close" onclick="closeHSEReviewModal()">✕</button>
+            </div>
+
+            <!-- Lifecycle Tracker -->
+            <div style="margin-bottom: 16px; background: #f8fafc; padding: 12px; border-radius: 6px;">
+                <div style="font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 8px;">
+                    Safety Action Lifecycle Loop:
+                </div>
+                <div id="modalLifecycleTracker" style="display: flex; justify-content: space-between;"></div>
+            </div>
+
+            <!-- Photo Attachment Preview Container -->
+            <div id="modalReportPhotoContainer" style="display: none; text-align: center; background: #0f172a; padding: 8px; border-radius: 6px; margin-bottom: 14px;">
+                <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; font-weight: 600;">📸 Photographic Evidence Attached by Worker</div>
+                <img id="modalReportPhoto" src="" alt="Report Attachment" style="max-height: 180px; max-width: 100%; border-radius: 4px; object-fit: contain;">
+            </div>
+
+            <!-- Original Narrative -->
+            <div style="background: #f1f5f9; padding: 10px 14px; border-radius: 6px; font-size: 12.5px; margin-bottom: 16px;">
+                <strong>Worker Observation:</strong>
+                <p id="modalRawText" style="margin-top: 4px; color: #1e293b;"></p>
+            </div>
+
+            <!-- Review / Correction Inputs -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+                <div class="form-group">
+                    <label class="form-label">Identified Hazard</label>
+                    <input type="text" id="modalHazard" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Risk Percentage (0 - 100)</label>
+                    <input type="number" id="modalRiskScore" class="form-control" min="0" max="100">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+                <div class="form-group">
+                    <label class="form-label">SIF Potential Classification</label>
+                    <select id="modalSifSelect" class="form-select">
+                        <option value="1">YES — SIF Potential Precursor</option>
+                        <option value="0">NO — Controlled Risk</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Responsible Person Assigned</label>
+                    <input type="text" id="modalResponsible" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Corrective Action Assigned</label>
+                <textarea id="modalActionAssigned" class="form-control" rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Officer Feedback / Learning Notes</label>
+                <textarea id="modalNotes" class="form-control" rows="2" placeholder="e.g. Worker was protected by secondary barrier; adjusted risk down to 75%."></textarea>
+            </div>
+
+            <!-- Decision Buttons -->
+            <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+                <button type="button" class="btn btn-outline btn-sm" style="color: #ef4444; border-color: #ef4444;" onclick="deleteActiveReport()">
+                    🗑️ Delete Report
+                </button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-danger btn-sm" onclick="submitReviewDecision('REJECTED')">✗ Reject</button>
+                    <button class="btn btn-warning btn-sm" onclick="submitReviewDecision('VERIFY_REQ')">🔍 Field Verify</button>
+                    <button class="btn btn-secondary btn-sm" onclick="submitReviewDecision('CORRECTED')">✎ Save Correction</button>
+                    <button class="btn btn-success btn-sm" onclick="submitReviewDecision('ACCEPTED')">✓ Accept AI Recommendation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== NOTIFICATIONS MODAL ==================== -->
+    <div id="notificationsModal" class="modal-backdrop">
+        <div class="modal-dialog" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 class="modal-title">System Alerts &amp; Notifications</h3>
+                <button class="modal-close" onclick="document.getElementById('notificationsModal').classList.remove('show')">✕</button>
+            </div>
+            <div id="notificationsDropdownList" style="max-height: 400px; overflow-y: auto;">
+                <!-- Populated by app.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Scripts -->
+    <script src="/static/js/offline.js?v=reg_clean_v1"></script>
+    <script src="/static/js/voice.js?v=reg_clean_v1"></script>
+    <script src="/static/js/safety_gate.js?v=reg_clean_v1"></script>
+    <script src="/static/js/charts.js?v=reg_clean_v1"></script>
+    <script src="/static/js/app.js?v=reg_clean_v1"></script>
+</body>
+</html>

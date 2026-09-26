@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurakshaX • Master Data Administration Hub</title>
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+  <style>
+    /* ==================== THEME DEFINITIONS ==================== */
+    :root, [data-theme="gold-obsidian"] {
+      --bg-main: #070a11;
+      --bg-card: #0f172a;
+      --bg-card-hover: #17243c;
+      --border: rgba(245, 158, 11, 0.22);
+      --border-focus: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --accent: #fbbf24;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --table-header: #0a101d;
+      --table-border: #1a2742;
+      --input-bg: #070c16;
+      --navbar-bg: rgba(15, 23, 42, 0.92);
+      --brand-gradient: linear-gradient(135deg, #d97706, #f59e0b);
+      --brand-shadow: rgba(217, 119, 6, 0.4);
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    [data-theme="cyber-blue"] {
+      --bg-main: #060d1a;
+      --bg-card: #0c1b33;
+      --bg-card-hover: #13284a;
+      --border: rgba(56, 189, 248, 0.22);
+      --border-focus: #38bdf8;
+      --text-main: #f0f9ff;
+      --text-muted: #7dd3fc;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --accent: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --table-header: #081426;
+      --table-border: #152c4f;
+      --input-bg: #060f1e;
+      --navbar-bg: rgba(12, 27, 51, 0.92);
+      --brand-gradient: linear-gradient(135deg, #0284c7, #2563eb);
+      --brand-shadow: rgba(2, 132, 199, 0.4);
+      --card-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.15);
+    }
+
+    [data-theme="emerald-ops"] {
+      --bg-main: #05100c;
+      --bg-card: #0a1c17;
+      --bg-card-hover: #102d25;
+      --border: rgba(16, 185, 129, 0.25);
+      --border-focus: #10b981;
+      --text-main: #ecfdf5;
+      --text-muted: #6ee7b7;
+      --primary: #059669;
+      --primary-hover: #047857;
+      --accent: #34d399;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --table-header: #071712;
+      --table-border: #13382e;
+      --input-bg: #040e0a;
+      --navbar-bg: rgba(10, 28, 23, 0.92);
+      --brand-gradient: linear-gradient(135deg, #059669, #10b981);
+      --brand-shadow: rgba(16, 185, 129, 0.4);
+      --card-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15);
+    }
+
+    [data-theme="executive-light"] {
+      --bg-main: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --border: #cbd5e1;
+      --border-focus: #0284c7;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --accent: #0284c7;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --radius: 12px;
+      --table-header: #e2e8f0;
+      --table-border: #e2e8f0;
+      --input-bg: #f8fafc;
+      --navbar-bg: rgba(255, 255, 255, 0.95);
+      --brand-gradient: linear-gradient(135deg, #0284c7, #0369a1);
+      --brand-shadow: rgba(2, 132, 199, 0.2);
+      --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+    body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+
+    /* Top Navigation Bar */
+    .admin-navbar {
+      background: var(--navbar-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: all 0.3s;
+    }
+    .brand-box { display: flex; align-items: center; gap: 14px; }
+    .brand-logo { width: 38px; height: 38px; background: var(--brand-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: white; box-shadow: 0 0 15px var(--brand-shadow); }
+    .brand-title { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
+    .brand-subtitle { font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #16a34a; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-warning { background: var(--warning); color: #000; }
+    .btn-secondary { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg-card-hover); }
+    .btn-sm { padding: 5px 10px; font-size: 11px; border-radius: 6px; }
+
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 8px;
+    }
+    .theme-select {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+    }
+    .theme-select option {
+      background: var(--bg-card);
+      color: var(--text-main);
+    }
+
+    /* Login Modal Overlay */
+    .auth-overlay {
+      position: fixed; inset: 0; background: rgba(7, 10, 17, 0.94);
+      backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .auth-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 36px;
+      max-width: 440px; width: 90%; box-shadow: var(--card-shadow); text-align: center;
+    }
+    .auth-icon { font-size: 48px; margin-bottom: 12px; }
+    .form-group { text-align: left; margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
+    .form-input {
+      width: 100%; padding: 12px 14px; background: var(--input-bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-main); font-size: 14px; transition: border-color 0.2s;
+    }
+    .form-input:focus { outline: none; border-color: var(--border-focus); }
+
+    /* Main Container */
+    .main-content { max-width: 1400px; width: 100%; margin: 0 auto; padding: 24px 28px; flex: 1; }
+
+    /* Metric Cards Grid */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 28px; }
+    .metric-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;
+      box-shadow: var(--card-shadow); transition: all 0.2s;
+    }
+    .metric-card:hover { transform: translateY(-2px); border-color: var(--border-focus); }
+    .metric-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .metric-title { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+    .metric-icon { font-size: 24px; }
+    .metric-value { font-size: 32px; font-weight: 800; color: var(--text-main); }
+    .metric-sub { font-size: 12px; color: var(--accent); margin-top: 6px; }
+
+    /* Tabs Navigation */
+    .tabs-bar {
+      display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 12px 20px; background: transparent; border: none; color: var(--text-muted);
+      font-size: 14px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent;
+      display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--text-main); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(245, 158, 11, 0.08); }
+
+    /* Tab Content Panes */
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Action & Search Bar */
+    .action-bar {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; flex-wrap: wrap;
+    }
+    .search-box {
+      display: flex; align-items: center; gap: 10px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 14px; min-width: 280px; flex: 1; max-width: 450px;
+    }
+    .search-box input { background: transparent; border: none; outline: none; color: var(--text-main); width: 100%; font-size: 13px; }
+
+    /* Data Tables */
+    .table-container {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow-x: auto; box-shadow: var(--card-shadow);
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th {
+      background: var(--table-header); padding: 14px 16px; color: var(--text-muted); font-size: 11px;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
+    }
+    td { padding: 14px 16px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-main); }
+    tr:hover td { background: var(--bg-card-hover); }
+
+    /* Badges */
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .badge-success { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .badge-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-info { background: rgba(2, 132, 199, 0.15); color: #38bdf8; border: 1px solid rgba(2, 132, 199, 0.3); }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+      max-width: 580px; width: 92%; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: var(--card-shadow);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .modal-title { font-size: 18px; font-weight: 700; }
+    .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; }
+    .close-btn:hover { color: var(--text-main); }
+
+    /* Form Grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--input-bg); padding: 14px; border-radius: 8px; border: 1px solid var(--border); margin-top: 6px; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+
+    /* Toast */
+    #toastContainer { position: fixed; bottom: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: var(--bg-card); border-left: 4px solid var(--primary); padding: 12px 18px; border-radius: 8px;
+      color: var(--text-main); font-size: 13px; font-weight: 600; box-shadow: var(--card-shadow); animation: slideIn 0.3s forwards;
+    }
+    .toast.success { border-left-color: var(--success); }
+    .toast.error { border-left-color: var(--danger); }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  </style>
+</head>
+<body>
+
+  <!-- MASTER ADMIN AUTHENTICATION GATEWAY -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-icon">🛡️</div>
+      <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 6px;">Master Safety Admin</h2>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Restricted access: Only authorized administrators can check, edit, or clear live portal data.</p>
+      
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Admin Username</label>
+          <input type="text" id="loginUser" class="form-input" value="admin" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password or Master PIN</label>
+          <input type="password" id="loginPass" class="form-input" placeholder="admin123 or PIN 9988" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px; margin-top: 8px;">
+          Unlock Master Admin Hub →
+        </button>
+      </form>
+      
+      <div style="margin-top: 18px; font-size: 12px; color: #64748b;">
+        Oil India Limited • SurakshaX Safety AI
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP NAVBAR -->
+  <header class="admin-navbar">
+    <div class="brand-box">
+      <div class="brand-logo">SX</div>
+      <div>
+        <div class="brand-title">SurakshaX • Master Admin Portal</div>
+        <div class="brand-subtitle">Oil India Limited • Central Safety & Machinery Data Console</div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Live Status Badges -->
+      <span class="badge badge-success" title="Local Server Online on Port 5000">● 5000 LIVE</span>
+      <span class="badge badge-info" title="Global live tunnel is active">🌐 WORLDWIDE LIVE</span>
+
+      <!-- Theme Switcher Dropdown -->
+      <div class="theme-switcher">
+        <span style="font-size: 13px;">🎨</span>
+        <select id="themeSelect" onchange="setAdminTheme(this.value)" class="theme-select" title="Switch Admin Portal Color Theme">
+          <option value="gold-obsidian">🏆 Oilfield Gold &amp; Obsidian</option>
+          <option value="cyber-blue">⚡ Cyber Petroleum Blue</option>
+          <option value="emerald-ops">💎 Emerald Field Ops</option>
+          <option value="executive-light">☀️ Modern Executive Light</option>
+        </select>
+      </div>
+
+      <!-- Link back to Live Turnstile Portal -->
+      <a href="/" target="_blank" class="btn btn-secondary btn-sm" style="font-weight: 700;">
+        🚪 Live Gate Portal ↗
+      </a>
+
+      <!-- Logout Button -->
+      <button class="btn btn-danger btn-sm" onclick="handleAdminLogout()">
+        🔒 Lock / Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="main-content">
+
+    <!-- METRICS OVERVIEW -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-title">Enrolled Workers</div>
+          <div class="metric-icon">👷</div>
+        </div>
+        <div class="metric-value" id="statWorkers">--</div>
+        <div class="metric-sub" id="statWorkersSub">Turnstile Access Ready</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-title">Machinery Fleet</div>
+          <div class="metric-icon">⚙️</div>
+        </div>
+        <div class="metric-value" id="statMachines">--</div>
+        <div class="metric-sub" id="statMachinesSub" style="color: var(--warning);">-- Overdue / Locked</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-title">Hazard & SIF Precursors</div>
+          <div class="metric-icon">⚠️</div>
+        </div>
+        <div class="metric-value" id="statReports">--</div>
+        <div class="metric-sub" id="statReportsSub" style="color: var(--danger);">-- Critical Precursors</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-title">Turnstile Gate Scans</div>
+          <div class="metric-icon">🚪</div>
+        </div>
+        <div class="metric-value" id="statGateLogs">--</div>
+        <div class="metric-sub">Access Evaluations Recorded</div>
+      </div>
+    </div>
+
+    <!-- TABS BAR -->
+    <nav class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('workers')">👷 Workers & Biometrics</button>
+      <button class="tab-btn" onclick="switchTab('machines')">⚙️ Machinery & Interlocks</button>
+      <button class="tab-btn" onclick="switchTab('reports')">⚠️ Hazard & SIF Reports</button>
+      <button class="tab-btn" onclick="switchTab('gate-logs')">🚪 Gate Access Logs</button>
+      <button class="tab-btn" onclick="switchTab('system')">🛠️ System Diagnostics & Links</button>
+    </nav>
+
+    <!-- ================================================================ -->
+    <!-- TAB 1: WORKERS & BIOMETRICS -->
+    <!-- ================================================================ -->
+    <div class="tab-pane active" id="pane-workers">
+      <div class="action-bar">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="workerSearchInput" placeholder="Search worker ID, name, department, or site..." oninput="filterWorkersTable()">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-primary btn-sm" onclick="openAddWorkerModal()">➕ Add New Worker</button>
+          <button class="btn btn-danger btn-sm" onclick="confirmClearAllWorkers()">⚠️ Clear All Workers</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Worker ID</th>
+              <th>Full Name</th>
+              <th>Department / Role</th>
+              <th>Assigned Site</th>
+              <th>Biometrics</th>
+              <th>Training</th>
+              <th>Medical Cert</th>
+              <th>Required PPE (Helmet, Vest, Gloves, Boots)</th>
+              <th>Gate Clearance</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="workersTableBody">
+            <tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading workers data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 2: MACHINERY & INTERLOCKS -->
+    <!-- ================================================================ -->
+    <div class="tab-pane" id="pane-machines">
+      <div class="action-bar">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="machineSearchInput" placeholder="Search machine ID, equipment name, site..." oninput="filterMachinesTable()">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-primary btn-sm" onclick="openAddMachineModal()">➕ Add Machine</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetDefaultMachines()">🔄 Restore Default Fleet</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Equipment Name</th>
+              <th>Operational Site</th>
+              <th>Status</th>
+              <th>Last Maintenance</th>
+              <th>Maintenance Due</th>
+              <th>Urgency</th>
+              <th>Base Risk</th>
+              <th>Safety Interlock</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="machinesTableBody">
+            <tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading machinery fleet...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 3: HAZARD & SIF REPORTS -->
+    <!-- ================================================================ -->
+    <div class="tab-pane" id="pane-reports">
+      <div class="action-bar">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="reportSearchInput" placeholder="Search report UID, worker, hazard, location..." oninput="filterReportsTable()">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-secondary btn-sm" onclick="exportReportsCSV()">📥 Export CSV</button>
+          <button class="btn btn-danger btn-sm" onclick="confirmClearAllReports()">🗑️ Clear All Reports</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Report UID</th>
+              <th>Worker ID</th>
+              <th>Location & Activity</th>
+              <th>Hazard Detected</th>
+              <th>Energy Source</th>
+              <th>SIF Potential</th>
+              <th>Risk Score</th>
+              <th>Status</th>
+              <th>Reported Date</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reportsTableBody">
+            <tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading reports...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 4: GATE ACCESS LOGS -->
+    <!-- ================================================================ -->
+    <div class="tab-pane" id="pane-gate-logs">
+      <div class="action-bar">
+        <h3 style="font-size: 16px; font-weight: 700;">Live Turnstile Entry Evaluations</h3>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-secondary btn-sm" onclick="loadGateLogs()">🔄 Refresh Logs</button>
+          <button class="btn btn-danger btn-sm" onclick="clearGateLogs()">🗑️ Clear Access Logs</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Log #</th>
+              <th>Worker ID</th>
+              <th>Worker Name</th>
+              <th>Timestamp</th>
+              <th>Gate Decision</th>
+              <th>Missing PPE Checklist</th>
+              <th>Camera Gate</th>
+            </tr>
+          </thead>
+          <tbody id="gateLogsTableBody">
+            <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading gate scan logs...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 5: SYSTEM DIAGNOSTICS & LIVE LINKS -->
+    <!-- ================================================================ -->
+    <div class="tab-pane" id="pane-system">
+      <div class="metrics-grid">
+        <div class="metric-card" style="grid-column: span 2;">
+          <div class="metric-header">
+            <div class="metric-title">Multi-Device Access Links</div>
+            <div class="metric-icon">🌐</div>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            Both the Live Turnstile Portal (<code>/</code>) and Master Admin Portal (<code>/admin</code>) operate together 24/7 independently of Antigravity.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0b132b; padding: 10px 14px; border-radius: 8px;">
+              <div>
+                <strong style="color: #38bdf8;">Global Live HTTPS:</strong>
+                <span id="sysGlobalUrl" style="margin-left: 8px; font-family: monospace;">https://define-stoplight-olympics.ngrok-free.dev</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="copyText('https://define-stoplight-olympics.ngrok-free.dev')">Copy</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0b132b; padding: 10px 14px; border-radius: 8px;">
+              <div>
+                <strong style="color: #4ade80;">Local Wi-Fi Network:</strong>
+                <span id="sysWifiUrl" style="margin-left: 8px; font-family: monospace;">http://192.168.1.5:5000</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="copyText('http://192.168.1.5:5000')">Copy</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0b132b; padding: 10px 14px; border-radius: 8px;">
+              <div>
+                <strong style="color: #fbbf24;">Localhost:</strong>
+                <span style="margin-left: 8px; font-family: monospace;">http://127.0.0.1:5000</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="copyText('http://127.0.0.1:5000')">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <div class="metric-title">Database Storage</div>
+            <div class="metric-icon">💾</div>
+          </div>
+          <div class="metric-value" id="sysDbSize">-- KB</div>
+          <div class="metric-sub" style="color: var(--text-muted);">SQLite: <code>sifguard.db</code></div>
+          <div style="margin-top: 18px;">
+            <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="showToast('Database is in optimal WAL mode', 'success')">Optimize DB Storage</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- MODAL: ADD / EDIT WORKER -->
+  <div class="modal-overlay" id="workerModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="workerModalTitle">Add New Worker</h3>
+        <button class="close-btn" onclick="closeModal('workerModal')">&times;</button>
+      </div>
+      <form id="workerForm" onsubmit="handleWorkerFormSubmit(event)">
+        <input type="hidden" id="workerFormMode" value="ADD">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Worker ID *</label>
+            <input type="text" id="wFormId" class="form-input" placeholder="e.g. W009" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" id="wFormName" class="form-input" placeholder="e.g. Manoj Sharma" required>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Role / Designation</label>
+            <input type="text" id="wFormRole" class="form-input" value="Field Operator" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Department</label>
+            <input type="text" id="wFormDept" class="form-input" value="Drilling & Production" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assigned Site</label>
+          <input type="text" id="wFormSite" class="form-input" value="Site A (Duliajan)" required>
+        </div>
+        
+        <label class="form-label">Mandatory Gate Compliance Checks (5 Classes)</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" id="wFormTraining" checked> Safety Training Valid</label>
+          <label class="checkbox-item"><input type="checkbox" id="wFormCert" checked> Medical Cert Valid</label>
+          <label class="checkbox-item"><input type="checkbox" id="wFormHelmet" checked> Safety Helmet Assigned</label>
+          <label class="checkbox-item"><input type="checkbox" id="wFormVest" checked> High-Vis Vest Assigned</label>
+          <label class="checkbox-item"><input type="checkbox" id="wFormGloves" checked> Safety Gloves Assigned</label>
+          <label class="checkbox-item"><input type="checkbox" id="wFormShoes" checked> Steel-Toe Boots Assigned</label>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('workerModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="wFormSubmitBtn">Save Worker</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT MACHINE -->
+  <div class="modal-overlay" id="machineModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="machineModalTitle">Add New Machine</h3>
+        <button class="close-btn" onclick="closeModal('machineModal')">&times;</button>
+      </div>
+      <form id="machineForm" onsubmit="handleMachineFormSubmit(event)">
+        <input type="hidden" id="machineFormMode" value="ADD">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Machine ID *</label>
+            <input type="text" id="mFormId" class="form-input" placeholder="e.g. M107" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Equipment Name *</label>
+            <input type="text" id="mFormName" class="form-input" placeholder="e.g. Rotary Mud Separator" required>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Operational Site</label>
+            <input type="text" id="mFormSite" class="form-input" value="Site A (Duliajan)" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="mFormStatus" class="form-input">
+              <option value="OPERATIONAL">OPERATIONAL</option>
+              <option value="OVERDUE">OVERDUE</option>
+              <option value="MAINTENANCE">MAINTENANCE</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Last Maintenance Date</label>
+            <input type="date" id="mFormLastMaint" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Next Maintenance Due</label>
+            <input type="date" id="mFormDueDate" class="form-input" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Base Risk Score (0 - 100)</label>
+          <input type="number" id="mFormRisk" class="form-input" min="0" max="100" value="50" required>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('machineModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Equipment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT REPORT -->
+  <div class="modal-overlay" id="reportModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit / Triage Safety Report</h3>
+        <button class="close-btn" onclick="closeModal('reportModal')">&times;</button>
+      </div>
+      <form id="reportForm" onsubmit="handleReportFormSubmit(event)">
+        <input type="hidden" id="rFormId">
+        <div class="form-group">
+          <label class="form-label">Hazard Description</label>
+          <input type="text" id="rFormHazard" class="form-input" required>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Energy Source</label>
+            <input type="text" id="rFormEnergy" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Barrier Status</label>
+            <input type="text" id="rFormBarrier" class="form-input" required>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Risk Score (0 - 100)</label>
+            <input type="number" id="rFormScore" class="form-input" min="0" max="100" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Risk Level</label>
+            <select id="rFormLevel" class="form-input">
+              <option value="CRITICAL">CRITICAL</option>
+              <option value="HIGH">HIGH</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="LOW">LOW</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">SIF Potential Flag</label>
+            <select id="rFormSif" class="form-input">
+              <option value="1">YES (SIF Precursor)</option>
+              <option value="0">NO (Routine Near-Miss)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Triage Status</label>
+            <select id="rFormStatus" class="form-input">
+              <option value="AI ANALYZED">AI ANALYZED</option>
+              <option value="TRIAGED">TRIAGED</option>
+              <option value="ACTION ASSIGNED">ACTION ASSIGNED</option>
+              <option value="RESOLVED">RESOLVED</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Corrective Solution / Action</label>
+          <textarea id="rFormSolution" class="form-input" rows="2"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('reportModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer"></div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Theme Management (persisted in localStorage)
+    function setAdminTheme(themeName) {
+      document.documentElement.setAttribute('data-theme', themeName);
+      localStorage.setItem('surakshax_admin_theme', themeName);
+      const select = document.getElementById('themeSelect');
+      if (select) select.value = themeName;
+    }
+
+    // Initialize Theme immediately
+    const initialTheme = localStorage.getItem('surakshax_admin_theme') || 'gold-obsidian';
+    setAdminTheme(initialTheme);
+
+    let rawWorkers = [];
+    let rawMachines = [];
+    let rawReports = [];
+    let rawGateLogs = [];
+
+    // Check Auth on load
+    window.addEventListener("DOMContentLoaded", async () => {
+      setAdminTheme(localStorage.getItem('surakshax_admin_theme') || 'gold-obsidian');
+      await checkAuthStatus();
+      loadSystemStats();
+    });
+
+    async function checkAuthStatus() {
+      try {
+        const res = await fetch('/api/admin/check_auth');
+        const data = await res.json();
+        if (data.authenticated) {
+          document.getElementById('authOverlay').style.display = 'none';
+          loadAllAdminData();
+        } else {
+          document.getElementById('authOverlay').style.display = 'flex';
+        }
+      } catch (e) {
+        document.getElementById('authOverlay').style.display = 'flex';
+      }
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pass, pin: pass })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('authOverlay').style.display = 'none';
+          showToast('Master Admin Access Granted', 'success');
+          loadAllAdminData();
+        } else {
+          showToast(data.error || 'Authentication Failed', 'error');
+        }
+      } catch (err) {
+        showToast('Login request failed', 'error');
+      }
+    }
+
+    async function handleAdminLogout() {
+      await fetch('/api/admin/logout', { method: 'POST' });
+      document.getElementById('authOverlay').style.display = 'flex';
+      showToast('Logged out of Master Admin Hub', 'info');
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      event.currentTarget.classList.add('active');
+      document.getElementById(`pane-${tabId}`).classList.add('active');
+
+      if (tabId === 'gate-logs') loadGateLogs();
+    }
+
+    function loadAllAdminData() {
+      loadWorkers();
+      loadMachines();
+      loadReports();
+      loadGateLogs();
+      loadSystemStats();
+    }
+
+    // ==================== WORKERS ====================
+    async function loadWorkers() {
+      try {
+        const res = await fetch('/api/admin/workers');
+        const data = await res.json();
+        if (data.success) {
+          rawWorkers = data.workers;
+          renderWorkers(rawWorkers);
+          document.getElementById('statWorkers').innerText = data.total;
+          document.getElementById('statWorkersSub').innerText = `${data.compliant_count} of ${data.total} Cleared for Entry`;
+        }
+      } catch (e) {
+        console.error('Failed to load workers:', e);
+      }
+    }
+
+    function renderWorkers(workers) {
+      const tbody = document.getElementById('workersTableBody');
+      if (!workers || workers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 30px;">No workers registered. Click "Add New Worker" to create one.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = workers.map(w => {
+        const ppeIcons = [
+          w.helmet_assigned ? '<span title="Helmet Assigned" style="color:#22c55e;">⛑️</span>' : '<span title="Helmet Missing" style="color:#ef4444;opacity:0.3;">⛑️</span>',
+          w.vest_assigned ? '<span title="Safety Vest Assigned" style="color:#22c55e;">🦺</span>' : '<span title="Vest Missing" style="color:#ef4444;opacity:0.3;">🦺</span>',
+          w.gloves_assigned ? '<span title="Gloves Assigned" style="color:#22c55e;">🧤</span>' : '<span title="Gloves Missing" style="color:#ef4444;opacity:0.3;">🧤</span>',
+          w.shoes_assigned ? '<span title="Boots Assigned" style="color:#22c55e;">🥾</span>' : '<span title="Boots Missing" style="color:#ef4444;opacity:0.3;">🥾</span>'
+        ].join(' ');
+
+        const clearanceBadge = w.is_compliant 
+          ? '<span class="badge badge-success">✓ CLEARED</span>'
+          : `<span class="badge badge-danger">✗ BLOCKED (${w.missing_items.length})</span>`;
+
+        const bioBadge = w.face_enrolled
+          ? '<span class="badge badge-success">ENROLLED</span>'
+          : '<span class="badge badge-warning">PENDING</span>';
+
+        return `
+          <tr>
+            <td><strong>${w.id}</strong></td>
+            <td><strong>${w.name}</strong></td>
+            <td>${w.department} <br><small style="color:var(--text-muted);">${w.role}</small></td>
+            <td>${w.site}</td>
+            <td>${bioBadge}</td>
+            <td>${w.training_valid ? '✅ Valid' : '❌ Expired'}</td>
+            <td>${w.cert_valid ? '✅ Valid' : '❌ Expired'}</td>
+            <td style="font-size: 16px;">${ppeIcons}</td>
+            <td>${clearanceBadge}</td>
+            <td style="text-align: right; white-space: nowrap;">
+              <button class="btn btn-secondary btn-sm" onclick="toggleWorkerClearance('${w.id}')" title="Toggle Entry Clearance">⚡ Toggle</button>
+              <button class="btn btn-secondary btn-sm" onclick="openEditWorkerModal('${w.id}')">✏️ Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteWorker('${w.id}')">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterWorkersTable() {
+      const q = document.getElementById('workerSearchInput').value.toLowerCase();
+      const filtered = rawWorkers.filter(w => 
+        w.id.toLowerCase().includes(q) ||
+        w.name.toLowerCase().includes(q) ||
+        w.department.toLowerCase().includes(q) ||
+        w.site.toLowerCase().includes(q)
+      );
+      renderWorkers(filtered);
+    }
+
+    function openAddWorkerModal() {
+      document.getElementById('workerModalTitle').innerText = 'Add New Worker';
+      document.getElementById('workerFormMode').value = 'ADD';
+      document.getElementById('wFormId').value = '';
+      document.getElementById('wFormId').disabled = false;
+      document.getElementById('wFormName').value = '';
+      document.getElementById('wFormRole').value = 'Field Operator';
+      document.getElementById('wFormDept').value = 'Drilling & Production';
+      document.getElementById('wFormSite').value = 'Site A (Duliajan)';
+      document.getElementById('wFormTraining').checked = true;
+      document.getElementById('wFormCert').checked = true;
+      document.getElementById('wFormHelmet').checked = true;
+      document.getElementById('wFormVest').checked = true;
+      document.getElementById('wFormGloves').checked = true;
+      document.getElementById('wFormShoes').checked = true;
+      openModal('workerModal');
+    }
+
+    function openEditWorkerModal(workerId) {
+      const w = rawWorkers.find(item => item.id === workerId);
+      if (!w) return;
+
+      document.getElementById('workerModalTitle').innerText = `Edit Worker: ${w.name} (${w.id})`;
+      document.getElementById('workerFormMode').value = 'EDIT';
+      document.getElementById('wFormId').value = w.id;
+      document.getElementById('wFormId').disabled = true;
+      document.getElementById('wFormName').value = w.name;
+      document.getElementById('wFormRole').value = w.role;
+      document.getElementById('wFormDept').value = w.department;
+      document.getElementById('wFormSite').value = w.site;
+      document.getElementById('wFormTraining').checked = !!w.training_valid;
+      document.getElementById('wFormCert').checked = !!w.cert_valid;
+      document.getElementById('wFormHelmet').checked = !!w.helmet_assigned;
+      document.getElementById('wFormVest').checked = !!w.vest_assigned;
+      document.getElementById('wFormGloves').checked = !!w.gloves_assigned;
+      document.getElementById('wFormShoes').checked = !!w.shoes_assigned;
+      openModal('workerModal');
+    }
+
+    async function handleWorkerFormSubmit(e) {
+      e.preventDefault();
+      const mode = document.getElementById('workerFormMode').value;
+      const workerId = document.getElementById('wFormId').value.trim().toUpperCase();
+
+      const payload = {
+        id: workerId,
+        name: document.getElementById('wFormName').value.trim(),
+        role: document.getElementById('wFormRole').value.trim(),
+        department: document.getElementById('wFormDept').value.trim(),
+        site: document.getElementById('wFormSite').value.trim(),
+        training_valid: document.getElementById('wFormTraining').checked ? 1 : 0,
+        cert_valid: document.getElementById('wFormCert').checked ? 1 : 0,
+        helmet_assigned: document.getElementById('wFormHelmet').checked ? 1 : 0,
+        vest_assigned: document.getElementById('wFormVest').checked ? 1 : 0,
+        gloves_assigned: document.getElementById('wFormGloves').checked ? 1 : 0,
+        shoes_assigned: document.getElementById('wFormShoes').checked ? 1 : 0
+      };
+
+      const url = mode === 'ADD' ? '/api/admin/workers' : `/api/admin/workers/${workerId}`;
+      const method = mode === 'ADD' ? 'POST' : 'PUT';
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          closeModal('workerModal');
+          loadWorkers();
+        } else {
+          showToast(data.error || 'Operation failed', 'error');
+        }
+      } catch (err) {
+        showToast('Network error while saving worker', 'error');
+      }
+    }
+
+    async function toggleWorkerClearance(workerId) {
+      try {
+        const res = await fetch(`/api/admin/workers/toggle_clearance/${workerId}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Clearance for ${workerId}: ${data.clearance_status}`, 'success');
+          loadWorkers();
+        }
+      } catch (e) {
+        showToast('Failed to toggle clearance', 'error');
+      }
+    }
+
+    async function deleteWorker(workerId) {
+      if (!confirm(`Are you sure you want to delete worker ${workerId}? All biometric data and gate credentials will be deleted.`)) return;
+      try {
+        const res = await fetch(`/api/admin/workers/${workerId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadWorkers();
+        } else {
+          showToast(data.error || 'Failed to delete worker', 'error');
+        }
+      } catch (e) {
+        showToast('Delete worker request failed', 'error');
+      }
+    }
+
+    async function confirmClearAllWorkers() {
+      if (!confirm("⚠️ CRITICAL ACTION: Purge ALL enrolled workers and biometric templates? Only use if resetting the system.")) return;
+      try {
+        const res = await fetch('/api/admin/workers/clear_all', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadWorkers();
+        }
+      } catch (e) {
+        showToast('Failed to purge workers', 'error');
+      }
+    }
+
+    // ==================== MACHINES ====================
+    async function loadMachines() {
+      try {
+        const res = await fetch('/api/admin/machines');
+        const data = await res.json();
+        if (data.success) {
+          rawMachines = data.machines;
+          renderMachines(rawMachines);
+          document.getElementById('statMachines').innerText = data.total;
+          document.getElementById('statMachinesSub').innerText = `${data.overdue_count} Overdue • ${data.locked_count} Interlocked`;
+        }
+      } catch (e) {
+        console.error('Failed to load machines:', e);
+      }
+    }
+
+    function renderMachines(machines) {
+      const tbody = document.getElementById('machinesTableBody');
+      if (!machines || machines.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 30px;">No machinery registered. Click "Add Machine" or "Restore Default Fleet".</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = machines.map(m => {
+        const urgencyBadge = m.is_overdue
+          ? `<span class="badge badge-danger">OVERDUE (${Math.abs(m.days_remaining)}d)</span>`
+          : (m.days_remaining <= 2 ? `<span class="badge badge-warning">EXPIRING (${m.days_remaining}d)</span>` : `<span class="badge badge-success">OK (${m.days_remaining}d)</span>`);
+
+        const interlockBadge = m.locked
+          ? '<span class="badge badge-danger">🔒 LOCKED</span>'
+          : '<span class="badge badge-success">UNLOCKED</span>';
+
+        return `
+          <tr>
+            <td><strong>${m.id}</strong></td>
+            <td><strong>${m.name}</strong></td>
+            <td>${m.site}</td>
+            <td><span class="badge badge-info">${m.status}</span></td>
+            <td>${m.last_maintenance}</td>
+            <td>${m.due_date}</td>
+            <td>${urgencyBadge}</td>
+            <td><strong>${m.base_risk}</strong> / 100</td>
+            <td>${interlockBadge}</td>
+            <td style="text-align: right; white-space: nowrap;">
+              <button class="btn btn-secondary btn-sm" onclick="toggleMachineLock('${m.id}')">${m.locked ? '🔓 Unlock' : '🔒 Lock'}</button>
+              <button class="btn btn-secondary btn-sm" onclick="openEditMachineModal('${m.id}')">✏️ Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteMachine('${m.id}')">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterMachinesTable() {
+      const q = document.getElementById('machineSearchInput').value.toLowerCase();
+      const filtered = rawMachines.filter(m => 
+        m.id.toLowerCase().includes(q) ||
+        m.name.toLowerCase().includes(q) ||
+        m.site.toLowerCase().includes(q)
+      );
+      renderMachines(filtered);
+    }
+
+    function openAddMachineModal() {
+      document.getElementById('machineModalTitle').innerText = 'Add New Machine';
+      document.getElementById('machineFormMode').value = 'ADD';
+      document.getElementById('mFormId').value = '';
+      document.getElementById('mFormId').disabled = false;
+      document.getElementById('mFormName').value = '';
+      document.getElementById('mFormSite').value = 'Site A (Duliajan)';
+      document.getElementById('mFormStatus').value = 'OPERATIONAL';
+      document.getElementById('mFormLastMaint').value = new Date().toISOString().split('T')[0];
+      const nextMonth = new Date();
+      nextMonth.setDate(nextMonth.getDate() + 30);
+      document.getElementById('mFormDueDate').value = nextMonth.toISOString().split('T')[0];
+      document.getElementById('mFormRisk').value = 50;
+      openModal('machineModal');
+    }
+
+    function openEditMachineModal(machineId) {
+      const m = rawMachines.find(item => item.id === machineId);
+      if (!m) return;
+
+      document.getElementById('machineModalTitle').innerText = `Edit Machine: ${m.name} (${m.id})`;
+      document.getElementById('machineFormMode').value = 'EDIT';
+      document.getElementById('mFormId').value = m.id;
+      document.getElementById('mFormId').disabled = true;
+      document.getElementById('mFormName').value = m.name;
+      document.getElementById('mFormSite').value = m.site;
+      document.getElementById('mFormStatus').value = m.status;
+      document.getElementById('mFormLastMaint').value = m.last_maintenance;
+      document.getElementById('mFormDueDate').value = m.due_date;
+      document.getElementById('mFormRisk').value = m.base_risk;
+      openModal('machineModal');
+    }
+
+    async function handleMachineFormSubmit(e) {
+      e.preventDefault();
+      const mode = document.getElementById('machineFormMode').value;
+      const machineId = document.getElementById('mFormId').value.trim().toUpperCase();
+
+      const payload = {
+        id: machineId,
+        name: document.getElementById('mFormName').value.trim(),
+        site: document.getElementById('mFormSite').value.trim(),
+        status: document.getElementById('mFormStatus').value,
+        last_maintenance: document.getElementById('mFormLastMaint').value,
+        due_date: document.getElementById('mFormDueDate').value,
+        base_risk: parseInt(document.getElementById('mFormRisk').value)
+      };
+
+      const url = mode === 'ADD' ? '/api/admin/machines' : `/api/admin/machines/${machineId}`;
+      const method = mode === 'ADD' ? 'POST' : 'PUT';
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          closeModal('machineModal');
+          loadMachines();
+        } else {
+          showToast(data.error || 'Failed to save machine', 'error');
+        }
+      } catch (err) {
+        showToast('Network error while saving machine', 'error');
+      }
+    }
+
+    async function toggleMachineLock(machineId) {
+      try {
+        const res = await fetch(`/api/machines/toggle_lock/${machineId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason: 'Manual Emergency Interlock toggle by Master Administrator' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Machine ${machineId} interlock ${data.locked ? 'LOCKED' : 'UNLOCKED'}`, 'success');
+          loadMachines();
+        }
+      } catch (e) {
+        showToast('Failed to toggle lock', 'error');
+      }
+    }
+
+    async function deleteMachine(machineId) {
+      if (!confirm(`Delete machine ${machineId} from equipment registry?`)) return;
+      try {
+        const res = await fetch(`/api/admin/machines/${machineId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadMachines();
+        }
+      } catch (e) {
+        showToast('Failed to delete machine', 'error');
+      }
+    }
+
+    async function resetDefaultMachines() {
+      if (!confirm("Reset machinery registry to standard Oil India Limited fleet?")) return;
+      try {
+        const res = await fetch('/api/admin/machines/reset_defaults', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadMachines();
+        }
+      } catch (e) {
+        showToast('Failed to reset machinery', 'error');
+      }
+    }
+
+    // ==================== REPORTS ====================
+    async function loadReports() {
+      try {
+        const res = await fetch('/api/admin/reports');
+        const data = await res.json();
+        if (data.success) {
+          rawReports = data.reports;
+          renderReports(rawReports);
+          document.getElementById('statReports').innerText = data.total;
+          const sifCount = rawReports.filter(r => r.sif_potential).length;
+          document.getElementById('statReportsSub').innerText = `${sifCount} Flagged as SIF Potential`;
+        }
+      } catch (e) {
+        console.error('Failed to load reports:', e);
+      }
+    }
+
+    function renderReports(reports) {
+      const tbody = document.getElementById('reportsTableBody');
+      if (!reports || reports.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 30px;">No safety incident reports found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = reports.map(r => {
+        const levelBadge = r.risk_level === 'CRITICAL' 
+          ? '<span class="badge badge-danger">CRITICAL</span>'
+          : (r.risk_level === 'HIGH' ? '<span class="badge badge-warning">HIGH</span>' : '<span class="badge badge-info">MEDIUM</span>');
+
+        const sifBadge = r.sif_potential ? '<span class="badge badge-danger">SIF RISK</span>' : '<span class="badge badge-info">NEAR-MISS</span>';
+
+        return `
+          <tr>
+            <td><strong>${r.report_uid}</strong></td>
+            <td>${r.worker_id}</td>
+            <td>${r.location} <br><small style="color:var(--text-muted);">${r.activity}</small></td>
+            <td><strong>${r.hazard}</strong></td>
+            <td>${r.energy_source}</td>
+            <td>${sifBadge}</td>
+            <td><strong>${r.risk_score}</strong> / 100 <br>${levelBadge}</td>
+            <td><span class="badge badge-info">${r.status}</span></td>
+            <td>${r.created_at.split(' ')[0]}</td>
+            <td style="text-align: right; white-space: nowrap;">
+              <button class="btn btn-secondary btn-sm" onclick="openEditReportModal(${r.id})">✏️ Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteReport(${r.id})">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterReportsTable() {
+      const q = document.getElementById('reportSearchInput').value.toLowerCase();
+      const filtered = rawReports.filter(r => 
+        r.report_uid.toLowerCase().includes(q) ||
+        r.worker_id.toLowerCase().includes(q) ||
+        r.hazard.toLowerCase().includes(q) ||
+        r.location.toLowerCase().includes(q)
+      );
+      renderReports(filtered);
+    }
+
+    function openEditReportModal(reportId) {
+      const r = rawReports.find(item => item.id === reportId);
+      if (!r) return;
+
+      document.getElementById('rFormId').value = r.id;
+      document.getElementById('rFormHazard').value = r.hazard;
+      document.getElementById('rFormEnergy').value = r.energy_source;
+      document.getElementById('rFormBarrier').value = r.barrier_status;
+      document.getElementById('rFormScore').value = r.risk_score;
+      document.getElementById('rFormLevel').value = r.risk_level;
+      document.getElementById('rFormSif').value = r.sif_potential ? "1" : "0";
+      document.getElementById('rFormStatus').value = r.status;
+      document.getElementById('rFormSolution').value = r.solution || '';
+      openModal('reportModal');
+    }
+
+    async function handleReportFormSubmit(e) {
+      e.preventDefault();
+      const reportId = document.getElementById('rFormId').value;
+      const payload = {
+        hazard: document.getElementById('rFormHazard').value.trim(),
+        energy_source: document.getElementById('rFormEnergy').value.trim(),
+        barrier_status: document.getElementById('rFormBarrier').value.trim(),
+        risk_score: parseInt(document.getElementById('rFormScore').value),
+        risk_level: document.getElementById('rFormLevel').value,
+        sif_potential: parseInt(document.getElementById('rFormSif').value),
+        status: document.getElementById('rFormStatus').value,
+        solution: document.getElementById('rFormSolution').value.trim()
+      };
+
+      try {
+        const res = await fetch(`/api/admin/reports/${reportId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          closeModal('reportModal');
+          loadReports();
+        }
+      } catch (err) {
+        showToast('Failed to update report', 'error');
+      }
+    }
+
+    async function deleteReport(reportId) {
+      if (!confirm(`Delete report #${reportId}?`)) return;
+      try {
+        const res = await fetch(`/api/admin/reports/${reportId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadReports();
+        }
+      } catch (e) {
+        showToast('Failed to delete report', 'error');
+      }
+    }
+
+    async function confirmClearAllReports() {
+      if (!confirm("Are you sure you want to clear all historical safety reports?")) return;
+      try {
+        const res = await fetch('/api/admin/reports/clear_all', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadReports();
+        }
+      } catch (e) {
+        showToast('Failed to clear reports', 'error');
+      }
+    }
+
+    function exportReportsCSV() {
+      window.open('/api/admin/reports/export', '_blank');
+    }
+
+    // ==================== GATE ACCESS LOGS ====================
+    async function loadGateLogs() {
+      try {
+        const res = await fetch('/api/admin/logs');
+        const data = await res.json();
+        if (data.success) {
+          rawGateLogs = data.logs;
+          renderGateLogs(rawGateLogs);
+          document.getElementById('statGateLogs').innerText = data.total;
+        }
+      } catch (e) {
+        console.error('Failed to load gate logs:', e);
+      }
+    }
+
+    function renderGateLogs(logs) {
+      const tbody = document.getElementById('gateLogsTableBody');
+      if (!logs || logs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">No gate access attempts logged yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = logs.map(l => {
+        const granted = l.access_status.includes('GRANTED');
+        const statusBadge = granted
+          ? '<span class="badge badge-success">✓ GRANTED</span>'
+          : '<span class="badge badge-danger">✗ DENIED</span>';
+
+        return `
+          <tr>
+            <td>#${l.id}</td>
+            <td><strong>${l.worker_id}</strong></td>
+            <td><strong>${l.worker_name}</strong></td>
+            <td>${l.timestamp}</td>
+            <td>${statusBadge}</td>
+            <td style="color:${granted ? '#4ade80' : '#f87171'}; font-size:12px;">${l.missing_ppe}</td>
+            <td><small style="color:var(--text-muted);">${l.camera_source}</small></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function clearGateLogs() {
+      if (!confirm("Clear historical turnstile access logs?")) return;
+      try {
+        const res = await fetch('/api/admin/logs', { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadGateLogs();
+        }
+      } catch (e) {
+        showToast('Failed to clear logs', 'error');
+      }
+    }
+
+    // ==================== SYSTEM STATS ====================
+    async function loadSystemStats() {
+      try {
+        const res = await fetch('/api/admin/stats');
+        const data = await res.json();
+        if (data.success && data.stats) {
+          document.getElementById('sysDbSize').innerText = `${data.stats.database_size_kb} KB`;
+        }
+      } catch (e) {
+        console.error('System stats failed:', e);
+      }
+    }
+
+    // ==================== HELPERS ====================
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function showToast(msg, type = 'info') {
+      const box = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerText = msg;
+      box.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Copied to clipboard: ' + text, 'success');
+      });
+    }
+  </script>
+</body>
+</html>
