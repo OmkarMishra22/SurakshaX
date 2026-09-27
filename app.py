@@ -32,15 +32,12 @@ def create_app():
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
-    # Initialize database and seed if required (supports both local and Vercel /tmp)
+    # Initialize database and seed demo risk data if reports table is empty
     try:
-        if not os.path.exists(DB_PATH):
-            seed_database()
-        else:
-            init_db()
+        seed_database()
     except Exception:
         try:
-            seed_database()
+            init_db()
         except Exception:
             pass
 
