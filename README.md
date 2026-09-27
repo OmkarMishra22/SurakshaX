@@ -2,7 +2,6 @@
 
 **Smart India Hackathon 2026 | Problem Statement 26165**  
 **Organization:** Oil India Limited (OIL)  
-**Team ID:** Sw-77  
 
 ---
 
